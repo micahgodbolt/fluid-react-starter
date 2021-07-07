@@ -1,5 +1,4 @@
-import { useContext } from "react";
-import { AppContext } from "../model/context";
+import { useModel } from "../utils";
 import { Node } from '../model/types';
 // TODO: Move actual actions to model and use hook to wrap them up with context
 
@@ -21,7 +20,7 @@ const actions = {
 
 
 export const useDispatch = () => {
-  const model = useContext(AppContext);
+  const model = useModel();
   const dispatch = (action: any) => {
     if (!model) return;
     switch (action.type) {

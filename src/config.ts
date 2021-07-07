@@ -9,6 +9,8 @@ export const containerConfig = {
   },
 };
 
+export const FILEPATH  = 'fluid';
+
 export const serviceConfig = {};
 
 export const defaultData: any[] = [

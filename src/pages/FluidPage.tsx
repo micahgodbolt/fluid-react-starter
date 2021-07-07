@@ -1,23 +1,23 @@
 import React from "react";
 import { useDispatch, useQueries } from "../hooks";
-import { FluidContainer } from "../components";
+import { FluidContext } from "../utils";
 import { useParams } from "react-router-dom";
 
 export const FluidPage = () => {
   let { id } = useParams<{id:string}>();
   return (
-    <FluidContainer id={id}>
-      <PageContent id={id} />
-    </FluidContainer>
+    <FluidContext id={id}>
+      <PageContent  />
+    </FluidContext>
   );
 };
 
-const PageContent = (props:{id: string}) => {
+const PageContent = () => {
   const { useGetAllNodes } = useQueries();
   const { dispatch, actions } = useDispatch();
   const allNodes = useGetAllNodes();
 
   return (
-    <div>  <h1>Welcome: {props.id}</h1></div>
+    <div>  <h1>Welcome</h1></div>
   )
 }

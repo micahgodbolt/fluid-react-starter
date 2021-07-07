@@ -2,6 +2,7 @@ import React from "react";
 import TLC from "@fluid-experimental/tinylicious-client";
 import "./App.css";
 import { FluidPage, Home } from "./pages";
+import { FILEPATH } from "./config";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 TLC.init();
@@ -17,7 +18,7 @@ const App = () => {
         </ul>
       </nav>
       <Switch>
-        <Route path="/fluid/:id">
+        <Route path={`/${FILEPATH}/:id`}>
           <FluidPage />
         </Route>
         <Route path="/">

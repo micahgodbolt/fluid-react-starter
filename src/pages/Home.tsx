@@ -1,12 +1,12 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { createFluidContainer } from "../model";
+import { createFluidFile } from "../utils";
 
 export const Home = () => {
   const history = useHistory();
   const handleClick = async () => {
-    const containerId = await createFluidContainer();
-    history.push(`/fluid/${containerId}`)
+    const filePath = await createFluidFile();
+    history.push(filePath)
   }
 
   return (

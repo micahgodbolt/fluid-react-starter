@@ -1,5 +1,5 @@
 import * as React from "react";
-import { AppContext } from "../model/context";
+import { useModel } from "./context/useModel";
 import { FluidModel } from '../model/model'
 
 
@@ -7,7 +7,7 @@ export const useSelector = (
   selector: (model: FluidModel, ev?: any) => any,
   listener: string[]
 ) => {
-  const model = React.useContext(AppContext);
+  const model = useModel();
   const [selectorState, setSelectorState] = React.useState(selector(model));
 
   React.useEffect(() => {
