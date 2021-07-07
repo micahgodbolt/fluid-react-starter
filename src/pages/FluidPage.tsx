@@ -1,5 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
+import { v4 as uuid } from "uuid";
 import { useDispatch, useQueries } from "../hooks";
 import { FluidContext } from "../utils";
 import { DiceRoller } from "./DiceRoller";
@@ -17,7 +18,7 @@ const PageContent = () => {
   const { useGetAllNodeIds, useGetNode } = useQueries();
   const {
     dispatch,
-    actions: { editNode },
+    actions: { createNode, editNode },
   } = useDispatch();
   const allNodeIds = useGetAllNodeIds();
   const diceRollers = allNodeIds.map((id: string) => (
@@ -30,5 +31,19 @@ const PageContent = () => {
       }
     />
   ));
-  return <div>{diceRollers}</div>;
+
+  const createNewDiceRoller = () =>
+    dispatch(createNode({ id: uuid(), props: { value: 1 } }));
+
+  return (
+    <div style={{ textAlign: "center" }}>
+      <div>{diceRollers}</div>
+      <button
+        style={{ margin: "5vh", fontSize: 20 }}
+        onClick={createNewDiceRoller}
+      >
+        {"Create Dice Roller"}
+      </button>
+    </div>
+  );
 };
