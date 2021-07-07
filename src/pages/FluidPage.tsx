@@ -36,9 +36,14 @@ const PageContent = () => {
     dispatch(createNode({ id: uuid(), props: { value: 1 } }));
 
   return (
-    <div style={{textAlign: "center"}}>
+    <div style={{ textAlign: "center" }}>
       <div>{diceRollers}</div>
-      <button style={{margin: "5vh", fontSize: 20}} onClick={createNewDiceRoller}>{"Create Dice Roller"}</button>
+      <button
+        style={{ margin: "5vh", fontSize: 20 }}
+        onClick={createNewDiceRoller}
+      >
+        {"Create Dice Roller"}
+      </button>
     </div>
   );
 };
