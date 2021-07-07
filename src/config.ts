@@ -1,11 +1,11 @@
 import {
-  SharedDirectory,
+  SharedMap,
 } from "@fluid-experimental/fluid-framework";
 
 export const containerConfig = {
   name: "cra-demo-container",
   initialObjects: {
-    myDir: SharedDirectory,
+    myMap: SharedMap,
   },
 };
 
@@ -15,19 +15,11 @@ export const serviceConfig = {};
 
 export const defaultData: any[] = [
   {
-    id: "root",
-    topic: "node topic",
-    tags: ["Cool"],
-    style: {
-      background: "#333",
-      color: "000",
-      fontSize: "32",
-      fontWeight: "bold",
-    },
+    id: "1",
+    value: 0,
   },
   {
-    id: "child123",
-    topic: "node topic",
-    tags: ["Cool"],
-  },
+    id: "2",
+    value: 0,
+  }
 ];

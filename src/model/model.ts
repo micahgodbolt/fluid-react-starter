@@ -1,35 +1,36 @@
-import { ISharedDirectory } from "@fluid-experimental/fluid-framework";
+import { ISharedMap } from "@fluid-experimental/fluid-framework";
 import { EventEmitter } from "events";
 import {
   TinyliciousContainerServices,
 } from "@fluid-experimental/tinylicious-client";
 import { FluidContainer } from "@fluid-experimental/fluid-static";
 import { Node } from "./types";
-import {v4 as uuid} from "uuid";
 
 
 export class FluidModel extends EventEmitter {
-  private dir: ISharedDirectory;
+  private map: ISharedMap;
   constructor(private container: FluidContainer, private services: TinyliciousContainerServices) {
     super();
-    this.dir = container.initialObjects.myDir as ISharedDirectory;
-    this.dir.on("valueChanged", (changed, local, op, target) => {
+    this.map = container.initialObjects.myMap as ISharedMap;
+    this.map.on("valueChanged", (changed, local, op, target) => {
       this.emit("anyChanged");
     })    
   }
 
   public getAllNodes = () => {
+    return Array.from(this.map.values());
   }
 
-  public editNode = (id: string, data: Partial<Node>) => {
+  public editNode = (id: string, data: Node) => {
+    this.map.set(id, data);
   }
 
-  public createNode = (data: Node) => {
-    if (this.dir.get(data.id)) {
+  public createNode = (id: string, data: Node) => {
+    if (this.map.get(id)) {
       // id already exists
       return;
     }
-   
+    this.map.set(id, data);
   }
 }
 

@@ -10,10 +10,16 @@ const actions = {
       props,
     };
   },
-  createNode: (props: Node) => {
+  createNode: (id: string, props: Node) => {
     return {
       type: "createNode",
+      id,
       props,
+    }
+  },
+  getAllNodes: () => {
+    return {
+      type: "getAllNodess",
     }
   }
 }
@@ -25,10 +31,13 @@ export const useDispatch = () => {
     if (!model) return;
     switch (action.type) {
       case "editNode":
-        model.editNode(action.id, action.props)
+        model.editNode(action.id, action.props);
         break;
       case "createNode":
-        model.createNode(action.props)
+        model.createNode(action.id, action.props);
+        break;
+      case "getAllNodes":
+        model.getAllNodes();
         break;
       default:
         break;

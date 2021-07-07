@@ -1,13 +1,12 @@
 import {
-  ISharedDirectory,
+  ISharedMap,
 } from "@fluid-experimental/fluid-framework";
 
 
 export interface Node {
-  id: string;
-  [key: string]: any;
+  value: number;
 }
 
 export interface InitialObjects {
-  myDir: ISharedDirectory;
+  myMap: ISharedMap;
 }
