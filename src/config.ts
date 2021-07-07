@@ -16,10 +16,10 @@ export const serviceConfig = {};
 export const defaultData: any[] = [
   {
     id: "1",
-    value: 0,
+    value: 1,
   },
   {
     id: "2",
-    value: 0,
+    value: 2,
   }
 ];
