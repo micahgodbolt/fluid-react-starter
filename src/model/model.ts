@@ -18,12 +18,22 @@ export class FluidModel extends EventEmitter {
     }
     this.map.on("valueChanged", (changed, local, op, target) => {
       this.emit("anyChanged");
+      this.emit(`${changed.key}Changed`);
     })    
   }
 
-  public getAllNodes = () => {
-    return Array.from(this.map.values());
+  public getAllNodeIds = (): string[] => {
+    return Array.from(this.map.keys());
   }
+
+  public getNode = (id: string): Node => {
+    const node = this.map.get<Node>(id);
+    if (node === undefined) {
+      throw Error(`${id} not found`);
+    }
+    return node;
+  }
+
 
   public editNode = (id: string, data: Partial<Node>) => {
     this.map.set(id, data);
