@@ -1,7 +1,8 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 import { useDispatch, useQueries } from "../hooks";
 import { FluidContext } from "../utils";
-import { useParams } from "react-router-dom";
+import { DiceRoller } from "./DiceRoller";
 
 export const FluidPage = () => {
   let { id } = useParams<{ id: string }>();
@@ -13,16 +14,21 @@ export const FluidPage = () => {
 };
 
 const PageContent = () => {
-  const { useGetAllNodes } = useQueries();
-  const { dispatch, actions: { editNode } } = useDispatch();
-  const allNodes = useGetAllNodes();
-
-  const handleClick1 = () => dispatch(editNode({ id: "1", props: { value: Date.now().toString() } }))
-  const handleClick2 = () => dispatch(editNode({ id: "2", props: { value: Date.now().toString() } }))
-  return (
-    <div>
-      <div>Dice 1: {allNodes[0].value} <button onClick={handleClick1} >click me</button></div>
-      <div>Dice 2: {allNodes[1].value} <button onClick={handleClick2} >click me</button> </div>
-    </div >
-  )
-}
+  const { useGetAllNodeIds, useGetNode } = useQueries();
+  const {
+    dispatch,
+    actions: { editNode },
+  } = useDispatch();
+  const allNodeIds = useGetAllNodeIds();
+  const diceRollers = allNodeIds.map((id: string) => (
+    <DiceRoller
+      id={id}
+      key={id}
+      getNode={useGetNode}
+      updateValue={(value: number) =>
+        dispatch(editNode({ id, props: { value } }))
+      }
+    />
+  ));
+  return <div>{diceRollers}</div>;
+};

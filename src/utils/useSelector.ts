@@ -3,9 +3,9 @@ import { useModel } from "./context/useModel";
 import { FluidModel } from '../model/model'
 
 
-export const useSelector = (
+export const useSelector = <T,>(
   selector: (model: FluidModel, ev?: any) => any,
-  listener: string[]
+  listener: string[],
 ) => {
   const model = useModel();
   const [selectorState, setSelectorState] = React.useState(selector(model));
@@ -25,5 +25,5 @@ export const useSelector = (
     };
   }, [selector, listener, model]);
 
-  return selectorState;
+  return selectorState as T;
 };
