@@ -23,6 +23,7 @@ const PageContent = () => {
   const diceRollers = allNodeIds.map((id: string) => (
     <DiceRoller
       id={id}
+      key={id}
       getNode={useGetNode}
       updateValue={(value: number) =>
         dispatch(editNode({ id, props: { value } }))
