@@ -21,14 +21,13 @@ const PageContent = () => {
     actions: { createNode, editNode },
   } = useDispatch();
   const allNodeIds = useGetAllNodeIds();
+  const handleUpdate = (id:string, value: number) => dispatch(editNode({ id, props: { value } }));
   const diceRollers = allNodeIds.map((id: string) => (
     <DiceRoller
       id={id}
       key={id}
       getNode={useGetNode}
-      updateValue={(value: number) =>
-        dispatch(editNode({ id, props: { value } }))
-      }
+      updateValue={handleUpdate}      
     />
   ));
 
@@ -37,7 +36,7 @@ const PageContent = () => {
 
   return (
     <div style={{ textAlign: "center" }}>
-      <div>{diceRollers}</div>
+      <div style={{display: "flex", flexWrap: 'wrap'}}>{diceRollers}</div>
       <button
         style={{ margin: "5vh", fontSize: 20 }}
         onClick={createNewDiceRoller}

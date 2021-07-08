@@ -3,7 +3,7 @@ import { Node } from "../model";
 interface IDiceRollerProps {
   id: string;
   getNode: (id: string) => Node;
-  updateValue: (value: number) => void;
+  updateValue: (id: string, value: number) => void;
 }
 
 export const DiceRoller = (props: IDiceRollerProps) => {
@@ -11,10 +11,10 @@ export const DiceRoller = (props: IDiceRollerProps) => {
   const diceNode = getNode(id);
 
   const diceCharacter = String.fromCodePoint(0x267f + diceNode.value);
-  const rollDice = () => updateValue(Math.floor(Math.random() * 6) + 1);
+  const rollDice = () => updateValue(id, Math.floor(Math.random() * 6) + 1);
 
   return (
-    <>
+    <div>
       <div
         style={{
           fontSize: 200,
@@ -26,6 +26,6 @@ export const DiceRoller = (props: IDiceRollerProps) => {
       <button style={{ fontSize: 50 }} onClick={rollDice}>
         Roll
       </button>
-    </>
+    </div>
   );
 };
