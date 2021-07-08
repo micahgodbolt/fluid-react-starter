@@ -1,4 +1,4 @@
-import { useSelector } from '../../utils/useSelector';
+import { useSelector } from './useSelector';
 import { queries } from "../../model";
 
 export const useQueries = () => {

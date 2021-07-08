@@ -1,6 +1,6 @@
 import * as React from "react";
-import { useModel } from "./context/useModel";
-import { FluidModel } from '../model/model'
+import { useModel } from "../context/useModel";
+import { FluidModel } from '../../model/model'
 
 
 export const useSelector = <T,>(
