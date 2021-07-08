@@ -20,7 +20,7 @@ const PageContent = () => {
     dispatch,
     actions: { createNode, editNode },
   } = useDispatch();
-  const allNodeIds = useGetAllNodeIds();
+  const allNodeIds = useGetAllNodeIds({});
   const handleUpdate = (id:string, value: number) => dispatch(editNode({ id, props: { value } }));
   const diceRollers = allNodeIds.map((id: string) => (
     <DiceRoller
