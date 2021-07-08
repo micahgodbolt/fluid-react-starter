@@ -1,18 +1,27 @@
-import { useSelector } from './useSelector';
-import { queries } from "../../model";
+import { useSelector } from "./useSelector";
+import { selectors } from "../../model";
+
+type SelectorKeys = keyof typeof selectors;
+type Selectors = typeof selectors;
 
 export const useQueries = () => {
-  type QueryKeys = keyof typeof queries;
-  const selectorQueries: Record<string, any> = {};
+  type Queries = {
+    [Property in SelectorKeys]: (
+      params: Parameters<Selectors[Property]>[0]
+    ) => ReturnType<ReturnType<Selectors[Property]>["query"]>;
+  };
 
-  for (const key in queries) {
-    const getQuery = queries[key as QueryKeys];
-    const useHook = (...params: any): void => {
-      const value = (getQuery as any)(...params);
+  const queries = {} as Queries;
+
+  for (const i in selectors) {
+    const key = i as SelectorKeys;
+    const selector = selectors[key];
+    const useHook = (...params: any): any => {
+      const value = (selector as any)(...params);
       return useSelector(value.query, value.events);
     };
-    selectorQueries[key] = useHook as (params: Parameters<typeof getQuery>) => void;
+    queries[key] = useHook;
   }
-  
-  return selectorQueries as Record<QueryKeys, any>;
-}
+
+  return queries;
+};

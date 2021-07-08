@@ -1,25 +1,26 @@
 import { FluidModel } from ".";
+import { Node } from "./types"
 
-export type QueryType = (params: any) => {
-    query: (model: FluidModel, payload: any) => void;
+export type QueryType<T, S> = (params: T) => {
+    query: (model: FluidModel, ev: any) => S;
     events: string[]
 };
 
-const useGetAllNodeIds = () => ({
+const useGetAllNodeIds: QueryType<{}, string[]> = () => ({
     query: (model: FluidModel, ev: any) => { 
         return model.getAllNodeIds();
     },
     events: ["anyChanged"]
 });
 
-const useGetNode = (id: string) => ({
+const useGetNode: QueryType<{id: string}, Node> = ((params) => ({
     query: (model: FluidModel, ev: any) => { 
-        return model.getNode(id);
+        return model.getNode(params.id);
     },
-    events: [`${id}Changed`],
-});
+    events: [`${params.id}Changed`],
+}));
 
-export const queries = {
+export const selectors = {
     useGetAllNodeIds,
     useGetNode,
 };
