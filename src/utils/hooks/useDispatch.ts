@@ -1,31 +1,38 @@
 import { useModel } from "../../utils";
-import { actions as appActions } from '../../model';
+import { reducers } from '../../model';
 // TODO: Move actual actions to model and use hook to wrap them up with context
 
 
-type AppActions = typeof appActions;
+type ReducerKeys = keyof typeof reducers;
+type Reducers = typeof reducers;
 
 export const useDispatch = () => {
   const model = useModel();
 
-  const dispatch = (payload: { type: keyof AppActions; [key:string]: any}) => {
+  const dispatch = (payload: { type: ReducerKeys; [key:string]: any}) => {
     if (!model) return;
 
     const { type, ...rest } = payload;
-    const action = appActions[type];
+    const reducer = reducers[type];
 
-    if (action !== undefined) {
-      action(model, rest as any )
+    if (reducer !== undefined) {
+      reducer(model, rest as any )
     }
   };
 
-  const actions = {} as Record<keyof AppActions, (p: any) => any>;
+  type Actions = {
+    [Property in keyof Reducers]: (p: Parameters<Reducers[Property]>[1]) => any
+  }
 
-  for (const key in appActions) {
-    actions[key] = (payload: any) => ({
+  const actions = {} as Actions;
+
+  for (const i in reducers) {
+    const key = i as ReducerKeys;
+    actions[key] = (payload) => ({
       type: key,
       ...payload
     })
   }
+
   return { dispatch, actions };
 }
