@@ -1,5 +1,5 @@
-import { useModel } from "../utils";
-import { actions as appActions } from '../actions/actions';
+import { useModel } from "../../utils";
+import { actions as appActions } from '../../model';
 // TODO: Move actual actions to model and use hook to wrap them up with context
 
 
@@ -18,7 +18,6 @@ export const useDispatch = () => {
       action(model, rest as any )
     }
   };
-
 
   const actions = {} as Record<keyof AppActions, (p: any) => any>;
 
