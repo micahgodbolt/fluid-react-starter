@@ -1,14 +1,11 @@
-import { ISharedMap } from "@fluid-experimental/fluid-framework";
+import { ISharedMap, FluidContainer } from "@fluid-experimental/fluid-framework";
 import { EventEmitter } from "events";
-import {
-  TinyliciousContainerServices,
-} from "@fluid-experimental/tinylicious-client";
-import { FluidContainer } from "@fluid-experimental/fluid-static";
+import { FrsContainerServices } from "@fluid-experimental/frs-client";
 import { Node } from "./types";
 
 export class FluidModel extends EventEmitter {
   private map: ISharedMap;
-  constructor(private container: FluidContainer, private services: TinyliciousContainerServices) {
+  constructor(private container: FluidContainer, private services: FrsContainerServices) {
     super();
     this.map = container.initialObjects.myMap as ISharedMap;
     this.map.on("valueChanged", (changed, local, op, target) => {

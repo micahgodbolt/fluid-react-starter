@@ -8,8 +8,8 @@ export const FluidContext: React.FC<{ id: string }> = ({id, children}) => {
 
   useEffect(() => {
     const loadModel = async () => {
-      const [container, services] = await getFluidContainer(id);
-      setModel(new FluidModel(container, services))
+      const { fluidContainer, containerServices } = await getFluidContainer(id);
+      setModel(new FluidModel(fluidContainer, containerServices))
     }
     loadModel();
   }, [id]);
