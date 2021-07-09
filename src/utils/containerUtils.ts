@@ -3,8 +3,7 @@ import {
   TinyliciousClient,
 } from "@fluid-experimental/tinylicious-client";
 import { v4 as uuid } from 'uuid';
-import { containerConfig, defaultData, serviceConfig } from "../config";
-import { FILEPATH } from '../config';
+import { containerConfig, defaultData, serviceConfig, FILEPATH } from "../config";
 
 export const createFilePath = (id: string) => {
   return `/${FILEPATH}/${id}`;

@@ -1,5 +1,5 @@
 import { useModel } from "../../utils";
-import { reducers } from '../../model';
+import { reducers } from '../../view/actions';
 // TODO: Move actual actions to model and use hook to wrap them up with context
 
 

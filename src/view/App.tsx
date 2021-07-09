@@ -1,7 +1,7 @@
 import React from "react";
 import TLC from "@fluid-experimental/tinylicious-client";
 import { FluidPage, Home } from "./pages";
-import { FILEPATH } from "./config";
+import { FILEPATH } from "../config";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 TLC.init();

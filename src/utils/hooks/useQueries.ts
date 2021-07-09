@@ -1,5 +1,5 @@
 import { useSelector } from "./useSelector";
-import { selectors } from "../../model";
+import { selectors } from "../../view/queries";
 
 type SelectorKeys = keyof typeof selectors;
 type Selectors = typeof selectors;

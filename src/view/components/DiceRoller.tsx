@@ -1,4 +1,4 @@
-import { Node } from "../model";
+import { Node } from "../../model";
 
 interface IDiceRollerProps {
   id: string;

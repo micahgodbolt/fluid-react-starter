@@ -1,9 +1,9 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
-import { useDispatch, useQueries } from "../utils";
-import { FluidContext } from "../utils";
-import { DiceRoller } from "./DiceRoller";
+import { useDispatch, useQueries } from "../../utils";
+import { FluidContext } from "../../utils";
+import { DiceRoller } from "../components/DiceRoller";
 
 export const FluidPage = () => {
   let { id } = useParams<{ id: string }>();
