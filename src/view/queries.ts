@@ -1,5 +1,5 @@
-import { FluidModel } from ".";
-import { Node } from "./types"
+import { FluidModel } from "../model";
+import { Node } from "../model/types"
 
 export type QueryType<T, S> = (params: T) => {
     query: (model: FluidModel, ev: any) => S;

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useModel } from "../context/useModel";
+import { useModel } from "./useModel";
 import { FluidModel } from '../../model/model'
 
 

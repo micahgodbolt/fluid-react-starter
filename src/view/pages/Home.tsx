@@ -1,6 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { createFluidFile } from "../utils";
+import { createFluidFile } from "../../utils";
 
 export const Home = () => {
   const history = useHistory();
