@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import { useDispatch, FluidContext } from "../../utils";
 import { DiceRoller } from "../components/DiceRoller";
-import { useGetAllDice } from "../queries";
+import { useGetDiceStore } from "../queries";
 
 export const FluidPage = () => {
   let { id } = useParams<{ id: string }>();
@@ -19,13 +19,13 @@ const PageContent = () => {
     dispatch,
     actions: { createNode, editNode },
   } = useDispatch();
-  const allDice = useGetAllDice();
+  const allDice = useGetDiceStore().state;
   const handleUpdate = (id: string, value: number) => dispatch(editNode({ id, props: { value } }));
-
-  const diceRollers = Object.keys(allDice).map((key: any) => (
+  console.log(allDice)
+  const diceRollers = Object.keys(allDice).map((key: string) => (
     <DiceRoller
-      key={allDice[key].key}
-      id={allDice[key].key}
+      key={key}
+      id={key}
       value={allDice[key].value}
       updateValue={handleUpdate}      
     />

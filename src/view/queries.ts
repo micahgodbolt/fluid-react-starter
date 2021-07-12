@@ -25,16 +25,16 @@ export interface ViewNode extends Node {
 }
 
 type UseGetStoreProps = {
-    reducer: any;
+    reducer: (state: any, action: any) => any;
     initialState: any;
+    actions: any;
 }
 
-export function useGetStore<T>({reducer, initialState}: UseGetStoreProps) {
+export function useGetStore<T>(getStuff: (model: FluidModel) => UseGetStoreProps) {
     const model = useModel();
-    const initState = initialState(model) as T;
-    const r = reducer(model) as (state: any, action: any) => any ; 
+    const { reducer, initialState } = getStuff(model)
 
-    const [state, dispatch] = React.useReducer(r, initState);
+    const [state, dispatch] = React.useReducer(reducer, initialState);
 
     React.useEffect(() => {
         const callAnyDispatch = (ev: any) => {
@@ -47,35 +47,34 @@ export function useGetStore<T>({reducer, initialState}: UseGetStoreProps) {
         };
     })
 
-    return state as T;
+    const store: { state: T } = { state }
+
+    return store;
 };
 
 
-export const useGetAllDice = () => useGetStore<{[key: string]: ViewNode}>({
-    reducer: (model: FluidModel) => {
-        return (state: any, action: any) => {
+export const useGetDiceStore = () => useGetStore<{ [key: string]: ViewNode }>((model: FluidModel) => {
+    return {
+        initialState: model.getAllNodes(),
+        reducer: (state: any, action: any) => {
             let newState;
             switch (action.type) {
                 case "singleChange":
                     const modifiedKey = action.event.key;
                     newState = { ...state, [modifiedKey]: model.getNode(modifiedKey) };
                     break;
-    
+
                 default:
                     break;
             }
             return newState;
+        },
+        actions: {
+            editNode: (payload: any) => model.editNode(payload.id, payload.props),
+            createNode: (payload: any) => model.createNode(payload.id, payload.props)
         }
-    },
-    initialState: (model: FluidModel) => {
-        return model.getAllNodes();
     }
-})
-
-
-
-
-
+});
 
 
 
