@@ -9,7 +9,7 @@ export class FluidModel extends EventEmitter {
     super();
     this.map = container.initialObjects.myMap as ISharedMap;
     this.map.on("valueChanged", (changed, local, op, target) => {
-      this.emit("anyChanged");
+      this.emit("anyChanged", changed);
       this.emit(`${changed.key}Changed`);
     })    
   }
@@ -24,6 +24,15 @@ export class FluidModel extends EventEmitter {
       throw Error(`${id} not found`);
     }
     return node;
+  }
+
+  public getAllNodes = () => {
+    const nodeIds = this.getAllNodeIds();
+    const nodes: Record<string, Node> = {};
+    for (const id of nodeIds) {
+      nodes[id] = this.getNode(id);
+    }
+    return nodes;
   }
 
 
