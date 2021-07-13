@@ -5,6 +5,7 @@ interface IDiceRollerProps {
   updateValue: (id: string, value: number) => void;
 }
 
+
 export const DiceRoller = (props: IDiceRollerProps) => {
   const { id, updateValue } = props;
 
@@ -22,7 +23,7 @@ export const DiceRoller = (props: IDiceRollerProps) => {
         {diceCharacter}
       </div>
       <button style={{ fontSize: 50 }} onClick={rollDice}>
-        Roll
+        Roll 
       </button>
     </div>
   );

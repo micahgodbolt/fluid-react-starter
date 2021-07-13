@@ -3,42 +3,48 @@ import { FluidModel } from "../model";
 import { Node } from "../model/types"
 import { useModel } from '../utils';
 
-export type QueryType<T, S> = (params: T) => {
-    query: (model: FluidModel, ev: any) => S;
-    events: string[]
-};
 
-const useGetAllNodeIds: QueryType<{}, string[]> = () => ({
-    query: (model: FluidModel, ev: any) => {
-        return model.getAllNodeIds();
-    },
-    events: ["anyChanged"]
-});
-
-
-export const selectors = {
-    useGetAllNodeIds,
-};
-
-export interface ViewNode extends Node {
-    key: string;
-}
-
-type UseGetStoreProps = {
+type StoreReturnProps = {
     reducer: (state: any, action: any) => any;
     initialState: any;
-    actions: any;
+    actions: Record<string, (payload: any) => void>;
 }
 
-export function useGetStore<T>(getStuff: (model: FluidModel) => UseGetStoreProps) {
-    const model = useModel();
-    const { reducer, initialState } = getStuff(model)
+export const useDispatch = (userActions: StoreReturnProps['actions']) => {
+  
+    const dispatch = (payload: { type: string } ) => {
+      const userAction = userActions[payload.type];
 
-    const [state, dispatch] = React.useReducer(reducer, initialState);
+      if (userAction !== undefined) {
+        userAction(payload)
+      }
+    };
+  
+    type Actions = {
+      [Property in keyof typeof userActions]: (p: Parameters<typeof userActions[Property]>[0]) => any
+    }
+  
+    const actions = {} as Actions;
+  
+    for (const i in userActions) {
+      actions[i] = (payload: any) => ({
+        type: i,
+        ...payload
+      })
+    }
+  
+    return { dispatch, actions };
+  }
+
+export function useGetStore<T>(getStore: (model: FluidModel) => StoreReturnProps) {
+    const model = useModel();
+    const store = getStore(model)
+
+    const [state, dispatchState] = React.useReducer<React.Reducer<T, any>>(store.reducer, store.initialState);
 
     React.useEffect(() => {
         const callAnyDispatch = (ev: any) => {
-            dispatch({ type: "singleChange", event: ev });
+            dispatchState({ type: "anyChanged", event: ev });
         };
 
         model.on("anyChanged", callAnyDispatch);
@@ -47,34 +53,35 @@ export function useGetStore<T>(getStuff: (model: FluidModel) => UseGetStoreProps
         };
     })
 
-    const store: { state: T } = { state }
+    const { dispatch, actions } = useDispatch(store.actions);
 
-    return store;
+    return { state, dispatch, actions };
 };
 
-
-export const useGetDiceStore = () => useGetStore<{ [key: string]: ViewNode }>((model: FluidModel) => {
+export const useGetDiceStore = () => useGetStore<{ [key: string]: Node }>((model) => {
     return {
         initialState: model.getAllNodes(),
         reducer: (state: any, action: any) => {
             let newState;
             switch (action.type) {
-                case "singleChange":
+                case "anyChanged":
                     const modifiedKey = action.event.key;
                     newState = { ...state, [modifiedKey]: model.getNode(modifiedKey) };
                     break;
-
-                default:
-                    break;
+                default: {
+                    newState = model.getAllNodes();
+                }   
             }
             return newState;
         },
         actions: {
-            editNode: (payload: any) => model.editNode(payload.id, payload.props),
+            editNode: (payload: {id: string, props: {value: number}}) => model.editNode(payload.id, payload.props),
             createNode: (payload: any) => model.createNode(payload.id, payload.props)
         }
     }
 });
+
+
 
 
 
