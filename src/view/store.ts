@@ -75,8 +75,8 @@ export const useGetDiceStore = () => useGetStore<{ [key: string]: Node }>((model
             return newState;
         },
         actions: {
-            editNode: (payload: {id: string, props: {value: number}}) => model.editNode(payload.id, payload.props),
-            createNode: (payload: any) => model.createNode(payload.id, payload.props)
+            editDice: (payload: {id: string, props: {value: number}}) => model.editNode(payload.id, payload.props),
+            createDice: (payload: any) => model.createNode(payload.id, payload.props)
         }
     }
 });
