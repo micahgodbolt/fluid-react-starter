@@ -1,7 +1,7 @@
 import React from "react";
 import { v4 as uuid } from "uuid";
 import { DiceRoller } from "./DiceRoller";
-import { useGetDiceStore } from "../queries";
+import { useGetDiceStore } from "../store";
 
 export const DiceRollerList = () => {
   const {
