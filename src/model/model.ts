@@ -1,11 +1,7 @@
-import {
-  ISharedMap,
-  FluidContainer,
-  IValueChanged,
-} from "@fluid-experimental/fluid-framework";
-import { EventEmitter } from "events";
-import { FrsContainerServices } from "@fluid-experimental/frs-client";
-import { Node } from "./types";
+import { ISharedMap, FluidContainer, IValueChanged } from '@fluid-experimental/fluid-framework';
+import { EventEmitter } from 'events';
+import { FrsContainerServices } from '@fluid-experimental/frs-client';
+import { Node } from './types';
 
 type EventPayload = {
   type: string;
@@ -14,15 +10,12 @@ type EventPayload = {
 
 export class FluidModel extends EventEmitter {
   private map: ISharedMap;
-  constructor(
-    private container: FluidContainer,
-    private services: FrsContainerServices
-  ) {
+  constructor(private container: FluidContainer, private services: FrsContainerServices) {
     super();
     this.map = container.initialObjects.myMap as ISharedMap;
-    this.map.on("valueChanged", (changed, local, op, target) => {
-      const payload: EventPayload = { type: "itemChanged", changed };
-      this.emit("modelChanged", payload);
+    this.map.on('valueChanged', (changed, local, op, target) => {
+      const payload: EventPayload = { type: 'itemChanged', changed };
+      this.emit('modelChanged', payload);
     });
   }
 

@@ -1,6 +1,6 @@
-import { FluidModel } from "../model";
-import { Node } from "../model/types";
-import { useGetStore } from "../utils/hooks";
+import { FluidModel } from '../model';
+import { Node } from '../model/types';
+import { useGetStore } from '../utils/hooks';
 
 const getDiceArray = (state: any) =>
   Object.keys(state).map((key: string) => ({ key, value: state[key].value }));
@@ -24,13 +24,13 @@ export const useGetDiceStore = () =>
     reducer: (model, state, payload) => {
       let newState;
       switch (payload.type) {
-        case "itemChanged":
+        case 'itemChanged':
           console.log(payload);
           const modifiedKey = payload.changed.key;
           const changedItem = { [modifiedKey]: model.getNode(modifiedKey) };
           newState = { ...state, ...changedItem };
           break;
-        case "personAdded":
+        case 'personAdded':
           break;
         default: {
           newState = getLoadState(model);

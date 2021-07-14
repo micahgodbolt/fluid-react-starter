@@ -1,10 +1,9 @@
-import React from "react";
+import React from 'react';
 interface IDiceRollerProps {
   id: string;
   value: number;
   updateValue: (id: string) => void;
 }
-
 
 export const DiceRoller = (props: IDiceRollerProps) => {
   const { id, updateValue } = props;
@@ -24,9 +23,9 @@ export const DiceRoller = (props: IDiceRollerProps) => {
         {diceCharacter}
       </div>
       <button style={{ fontSize: 50 }} onClick={rollDice}>
-        Roll 
+        Roll
       </button>
-      <div style={{fontSize: 12}}>{id.split('-')[0]}</div>
+      <div style={{ fontSize: 12 }}>{id.split('-')[0]}</div>
     </div>
   );
 };

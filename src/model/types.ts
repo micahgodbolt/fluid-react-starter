@@ -1,7 +1,4 @@
-import {
-  ISharedMap,
-} from "@fluid-experimental/fluid-framework";
-
+import { ISharedMap } from '@fluid-experimental/fluid-framework';
 
 export interface Node {
   value: number;
