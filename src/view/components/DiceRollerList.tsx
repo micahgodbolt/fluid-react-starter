@@ -5,30 +5,61 @@ import { useGetDiceStore } from "../store";
 
 export const DiceRollerList = () => {
   const {
-    state: allDice,
     dispatch,
-    actions: { editDice, createDice }
+    actions: { editDice, createDice },
+    queries: { getAllDice, getByValue }
   } = useGetDiceStore();
 
-  const handleUpdate = (id: string, value: number) => dispatch(editDice({ id, props: { value } }));
+  const randomizeDice = (id: string) => dispatch(editDice(
+    {
+      id,
+      props: { value: Math.floor(Math.random() * 6) + 1 }
+    }
+  ));
 
   const handleClick = () => dispatch(createDice({ id: uuid(), props: { value: 1 } }));
+  const handleRollAll = () => {
+    getAllDice().forEach((dice: any) => {
+      randomizeDice(dice.key)
+    });
+  }
 
-  const diceRollers = Object.keys(allDice).map((key: string) => (
+  console.log(getAllDice())
+
+  const diceRollers = getAllDice().map((dice: any) => (
     <DiceRoller
-      key={key}
-      id={key}
-      value={allDice[key].value}
-      updateValue={handleUpdate}
+      key={dice.key}
+      id={dice.key}
+      value={dice.value}
+      updateValue={randomizeDice}
     />
   ));
+
+  const sixes = getByValue(6).map((dice: any) => (
+    <DiceRoller
+      key={dice.key}
+      id={dice.key}
+      value={dice.value}
+      updateValue={randomizeDice}
+    />
+  ));
+
 
   return (
     <div style={{ textAlign: "center" }}>
       <button style={{ margin: "5vh", fontSize: 20 }} onClick={handleClick} >
         Create Dice Roller
       </button>
-      <div style={{ display: "flex", flexWrap: 'wrap' }}> {diceRollers} </div>
+
+      <button style={{ margin: "5vh", fontSize: 20 }} onClick={handleRollAll} >
+        Roll All
+      </button>
+      <div style={{ display: "flex", flexWrap: 'wrap', marginBottom: '5em' }}> {diceRollers} </div>
+      <hr/>
+      <h1>Sixes</h1>
+      <div style={{ display: "flex", flexWrap: 'wrap' }}>  {sixes} </div>
+
+
     </div>
   );
 };

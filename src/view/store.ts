@@ -1,84 +1,36 @@
-import React from "react";
 import { FluidModel } from "../model";
 import { Node } from "../model/types"
-import { useModel } from '../utils';
+import { useGetStore } from "../utils/hooks";
+
+const getDiceArray = (state: any) => Object.keys(state).map((key: string) => ({ key, value: state[key].value }));
+
+const getLoadState = (model: FluidModel) => model.getAllNodes();
 
 
-type StoreReturnProps = {
-    reducer: (state: any, action: any) => any;
-    initialState: any;
-    actions: Record<string, (payload: any) => void>;
-}
-
-export const useDispatch = (userActions: StoreReturnProps['actions']) => {
-  
-    const dispatch = (payload: { type: string } ) => {
-      const userAction = userActions[payload.type];
-
-      if (userAction !== undefined) {
-        userAction(payload)
-      }
-    };
-  
-    type Actions = {
-      [Property in keyof typeof userActions]: (p: Parameters<typeof userActions[Property]>[0]) => any
-    }
-  
-    const actions = {} as Actions;
-  
-    for (const i in userActions) {
-      actions[i] = (payload: any) => ({
-        type: i,
-        ...payload
-      })
-    }
-  
-    return { dispatch, actions };
-  }
-
-export function useGetStore<T>(getStore: (model: FluidModel) => StoreReturnProps) {
-    const model = useModel();
-    const store = getStore(model)
-
-    const [state, dispatchState] = React.useReducer<React.Reducer<T, any>>(store.reducer, store.initialState);
-
-    React.useEffect(() => {
-        const callAnyDispatch = (ev: any) => {
-            dispatchState({ type: "anyChanged", event: ev });
-        };
-
-        model.on("anyChanged", callAnyDispatch);
-        return () => {
-            model.off("anyChanged", callAnyDispatch);
-        };
-    })
-
-    const { dispatch, actions } = useDispatch(store.actions);
-
-    return { state, dispatch, actions };
-};
-
-export const useGetDiceStore = () => useGetStore<{ [key: string]: Node }>((model) => {
-    return {
-        initialState: model.getAllNodes(),
-        reducer: (state: any, action: any) => {
+export const useGetDiceStore = () => useGetStore<Record<string, Node>, any>({
+        initialState: (model) => getLoadState(model),        
+        queries: {
+            getAllDice: (state) => getDiceArray(state),
+            getByValue: (state, value: number) => getDiceArray(state).filter(item => item.value === value)
+        },
+        actions: {
+            editDice: (model, payload: { id: string, props: { value: number } }) => model.editNode(payload.id, payload.props),
+            createDice: (model, payload: {id: string, props: {value: number }}) => model.createNode(payload.id, payload.props)
+        },
+        reducer: (model, state, op) => {
             let newState;
-            switch (action.type) {
-                case "anyChanged":
-                    const modifiedKey = action.event.key;
-                    newState = { ...state, [modifiedKey]: model.getNode(modifiedKey) };
+            switch (op.type) {
+                case "itemChanged":
+                    const modifiedKey = op.event.key;
+                    const changedItem = { [modifiedKey]: model.getNode(modifiedKey) }
+                    newState = { ...state, ...changedItem };
                     break;
                 default: {
-                    newState = model.getAllNodes();
-                }   
+                    newState = getLoadState(model);
+                }
             }
             return newState;
         },
-        actions: {
-            editDice: (payload: {id: string, props: {value: number}}) => model.editNode(payload.id, payload.props),
-            createDice: (payload: any) => model.createNode(payload.id, payload.props)
-        }
-    }
 });
 
 
