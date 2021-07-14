@@ -1,7 +1,7 @@
-import React from "react";
-import { FluidPage, Home } from "./pages";
-import { FILEPATH } from "../config";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import React from 'react';
+import { FluidPage, Home } from './pages';
+import { FILEPATH } from '../config';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
 const App = () => {
   return (

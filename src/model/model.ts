@@ -1,21 +1,27 @@
-import { ISharedMap, FluidContainer } from "@fluid-experimental/fluid-framework";
-import { EventEmitter } from "events";
-import { FrsContainerServices } from "@fluid-experimental/frs-client";
-import { Node } from "./types";
+import { ISharedMap, FluidContainer, IValueChanged } from '@fluid-experimental/fluid-framework';
+import { EventEmitter } from 'events';
+import { FrsContainerServices } from '@fluid-experimental/frs-client';
+import { Node } from './types';
+
+type EventPayload = {
+  type: string;
+  changed: IValueChanged;
+};
 
 export class FluidModel extends EventEmitter {
   private map: ISharedMap;
   constructor(private container: FluidContainer, private services: FrsContainerServices) {
     super();
     this.map = container.initialObjects.myMap as ISharedMap;
-    this.map.on("valueChanged", (changed, local, op, target) => {
-      this.emit("itemChanged", changed);
-    })    
+    this.map.on('valueChanged', (changed, local, op, target) => {
+      const payload: EventPayload = { type: 'itemChanged', changed };
+      this.emit('modelChanged', payload);
+    });
   }
 
   public getAllNodeIds = (): string[] => {
     return Array.from(this.map.keys());
-  }
+  };
 
   public getNode = (id: string): Node => {
     const node = this.map.get<Node>(id);
@@ -23,7 +29,7 @@ export class FluidModel extends EventEmitter {
       throw Error(`${id} not found`);
     }
     return node;
-  }
+  };
 
   public getAllNodes = () => {
     const nodeIds = this.getAllNodeIds();
@@ -32,12 +38,11 @@ export class FluidModel extends EventEmitter {
       nodes[id] = this.getNode(id);
     }
     return nodes;
-  }
-
+  };
 
   public editNode = (id: string, data: Partial<Node>) => {
     this.map.set(id, data);
-  }
+  };
 
   public createNode = (id: string, data: Node) => {
     if (this.map.get(id)) {
@@ -45,9 +50,5 @@ export class FluidModel extends EventEmitter {
       return;
     }
     this.map.set(id, data);
-  }
+  };
 }
-
-
-
-
