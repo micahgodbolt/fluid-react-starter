@@ -23,13 +23,13 @@ export function useGetStore<S, P extends UseGetStoreProps>(props: UseGetStorePro
   const [state, dispatchState] = React.useReducer<React.Reducer<any, any>>(reducer, props.initialState(model));
 
   React.useEffect(() => {
-      const callItemDispatch = (ev: any) => {
-          dispatchState({ type: "itemChanged", event: ev });
+      const callItemDispatch = (payload: any) => {
+          dispatchState(payload);
       };
 
-      model.on("itemChanged", callItemDispatch);
+      model.on("modelChanged", callItemDispatch);
       return () => {
-          model.off("itemChanged", callItemDispatch);
+          model.off("modelChanged", callItemDispatch);
       };
   })
 

@@ -9,8 +9,9 @@ export class FluidModel extends EventEmitter {
     super();
     this.map = container.initialObjects.myMap as ISharedMap;
     this.map.on("valueChanged", (changed, local, op, target) => {
-      this.emit("itemChanged", changed);
-    })    
+      const payload ={type: "itemAdded", key: changed.key}
+      this.emit("modelChanged", payload);
+    })     
   }
 
   public getAllNodeIds = (): string[] => {
