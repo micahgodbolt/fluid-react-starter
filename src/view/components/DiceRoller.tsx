@@ -1,31 +1,32 @@
-import { Node } from "../../model";
-
+import React from "react";
 interface IDiceRollerProps {
   id: string;
-  getNode: (params: { id: string }) => Node;
-  updateValue: (id: string, value: number) => void;
+  value: number;
+  updateValue: (id: string) => void;
 }
 
-export const DiceRoller = (props: IDiceRollerProps) => {
-  const { id, getNode, updateValue } = props;
-  const diceNode = getNode({ id });
 
-  const diceCharacter = String.fromCodePoint(0x267f + diceNode.value);
-  const rollDice = () => updateValue(id, Math.floor(Math.random() * 6) + 1);
+export const DiceRoller = (props: IDiceRollerProps) => {
+  const { id, updateValue } = props;
+
+  const diceCharacter = String.fromCodePoint(0x267f + props.value);
+  const rollDice = () => updateValue(id);
 
   return (
     <div>
       <div
         style={{
           fontSize: 200,
-          color: `hsl(${diceNode.value * 60}, 70%, 50%)`,
+          lineHeight: 1,
+          color: `hsl(${props.value * 60}, 70%, 50%)`,
         }}
       >
         {diceCharacter}
       </div>
       <button style={{ fontSize: 50 }} onClick={rollDice}>
-        Roll
+        Roll 
       </button>
+      <div style={{fontSize: 12}}>{id.split('-')[0]}</div>
     </div>
   );
 };

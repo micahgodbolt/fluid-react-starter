@@ -1,9 +1,14 @@
-import { SharedMap } from "@fluid-experimental/fluid-framework";
+import { SharedMap, ISharedMap, FluidContainer } from "@fluid-experimental/fluid-framework";
 import {
   FrsConnectionConfig,
   InsecureTokenProvider,
 } from "@fluid-experimental/frs-client";
 import { generateUser } from "@fluidframework/server-services-client";
+
+
+////
+// Container and App setup
+////
 
 export const containerConfig = {
   name: "cra-demo-container",
@@ -12,20 +17,34 @@ export const containerConfig = {
   },
 };
 
+// changes URL path to your fluid pages
+// "fluid" yields a `/fluid/123` file path
 export const FILEPATH = "fluid";
 
+// Additional service configuration
 export const serviceConfig = {};
 
-export const defaultData: any[] = [
-  {
-    id: "1",
-    value: 1,
-  },
-  {
-    id: "2",
-    value: 2,
-  },
-];
+// Setup default data on initialObjects
+export const setDefaultData = (fluidContainer: FluidContainer) => {
+  const defaultData: any[] = [
+    {
+      id: "1",
+      value: 1,
+    },
+    {
+      id: "2",
+      value: 2,
+    },
+  ];
+  const map = fluidContainer.initialObjects.myMap as ISharedMap;
+  for (const data of defaultData) {
+    map.set(data.id, { value: data.value });
+  }
+}
+
+////
+// Connection Config
+////
 
 export const useFrs: boolean = process.env.REACT_APP_USE_FRS !== undefined;
 

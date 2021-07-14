@@ -21,7 +21,6 @@ npm start
 
 #### Running Against FRS Instance
 
-
 ## Editing the Application Code
 
 ### File Structure
@@ -29,18 +28,30 @@ npm start
 Provide guidance on what files the developer will be editing vs. what is provided as utils for them
 
 ### Changing the model
-
-`containerConfig` is located in `src/model/config.ts` and enables adding/modifying the `initialObjects` which can include DDSes or DataObjects.
+- Modifying the initialObjects
+- Updating default data
+- Adding getters and setters to the model
+- Modifying the store (initialValue, reducer, queries, actions)
+  - creating new queries
+  - creating new actions
+- using queries and actions in the view
 
 ### Modifying the default data
+This repo was created after being asked "how do I create a Fluid app that is more complex than Hello World?" We want to be able to answer this question, but to do so we need to make a few assumptions:
 
-`defaultData` is located in `src/model/config.ts` and is procesesed by `initDefaultData` in `src/model/FluidModel` to populate data on initial load.
+This is a starter repo for complex a Fluid appliation that makes the following assumptions:
 
 ### Creating actions
+1. You want to use React for your Fluid Application
+2. You want to keep clear separation between your model and view
+3. You want a light state management framework to remove the boilerplate needed to store, access and modify React app state
 
-Actions are written in `src/hooks/useDispatch`. We are using a dispatch pattern to avoid passing down callbacks into components and having a single entry point for all actions better supporting telemetry and other middleware.
+In the readme below we'll walk you through how to do the following:
 
-Start by adding your action's name to the `action` object. The function parameters will be any data need to perform the action. This data should be strongly typed. 
+### Model
+- Modify the `initialObjects` to include additional DDSes
+- Update the `defaultData` of those DDSes
+- Update the `model` to access and modify your Fluid data
 
 ```tsx
 const actions = {
@@ -109,7 +120,6 @@ export const useQueries = () => {
 ### Editing the Container Schema
 
 ## Deploying the Application
-
 
 ## Contributing
 
