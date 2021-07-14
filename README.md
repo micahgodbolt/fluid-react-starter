@@ -1,4 +1,14 @@
-# Using this repo
+# fluid-react-starter
+
+## Introduction to Repo
+
+### Overview
+
+This repo is aimed towards providing a starting example for developers that includes a Fluid data model, a React view, and a set of actions and queries that provide a separation-of-concerns between view and data in the application.
+
+###  Starting the Application
+
+#### Running Against Tinylicious Locally
 
 To start:
 
@@ -9,15 +19,24 @@ npx tinylicious
 npm start
 ```
 
-## Changing the model
+#### Running Against FRS Instance
+
+
+## Editing the Application Code
+
+### File Structure
+
+Provide guidance on what files the developer will be editing vs. what is provided as utils for them
+
+### Changing the model
 
 `containerConfig` is located in `src/model/config.ts` and enables adding/modifying the `initialObjects` which can include DDSes or DataObjects.
 
-## Modifying the default data
+### Modifying the default data
 
 `defaultData` is located in `src/model/config.ts` and is procesesed by `initDefaultData` in `src/model/FluidModel` to populate data on initial load.
 
-## Creating actions
+### Creating actions
 
 Actions are written in `src/hooks/useDispatch`. We are using a dispatch pattern to avoid passing down callbacks into components and having a single entry point for all actions better supporting telemetry and other middleware.
 
@@ -43,7 +62,7 @@ const actions = {
 }
 ```
 
-### Defining what our action does
+#### Defining what our action does
 
 Now that our action has a payload, we define how we are going to modify our model for that action. Add a `case` to our `dispatch` function that matches the `type` you wrote above, and write a function to process the action props. You'll have access to the `model` from context.
 
@@ -53,7 +72,7 @@ Now that our action has a payload, we define how we are going to modify our mode
     break;
 ```
 
-### Using your action
+#### Using your action
 
 Now that your action is defined and exported, you can use it in your view
 
@@ -65,7 +84,7 @@ const MyView = (props) => {
 };
 ```
 
-## Creating Queries
+### Creating Queries
 
 Queries are written in `src/hooks/useQueries`.
 
@@ -87,6 +106,9 @@ export const useQueries = () => {
 };
 ```
 
+### Editing the Container Schema
+
+## Deploying the Application
 
 
 ## Contributing
