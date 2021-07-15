@@ -31,8 +31,7 @@ export const useGetDiceStore = () =>
             case "singleDelete":
                 const tempState = {...state};
                 delete tempState[payload.key];
-                console.log(tempState)
-                newState = tempState ;
+                newState = tempState;
                 break;
             default: {
                 newState = getLoadState(model);
