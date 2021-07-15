@@ -1,8 +1,6 @@
 # fluid-react-starter
 
-## Introduction to Repo
-
-### Overview
+## About this repo
 
 This repo is a Fluid starter template that was created to answer the question "how do I create a Fluid app that is more complex than Hello World?" To answer this question this repo makes the following assumptions:
 
@@ -10,14 +8,15 @@ This repo is a Fluid starter template that was created to answer the question "h
 2. You want to keep clear separation between your model and view
 3. You want a light state management framework to remove the boilerplate needed to store, access and modify React app state
 
-In the readme below we'll walk you through how to do the following:
+
+## Overview
+In this readme we'll walk you through the following topics:
 
 ### Using this repo
 
 - Run the app locally
 - Run the app against an FRS instance
 - Deploy the app
-- Repo structure overview
 
 ### Modifying the model
 
@@ -107,13 +106,39 @@ Please replace this with another implementation of the `ITokenProvider`, such as
 
 ### Deploy the app
 
-### Repo structure overview
 
 ## Modifing the model
 
 ### Modify the schema to include additional DDSes
 
+Inside of `src/config.ts`, in the `containerConfig` you can modify the `initialObjects` that are returned by the container. 
+
+To add another DSS to this list, make sure that the DDS is imported from `@fluid-experimental/fluid-framework`, select a key, and add the DDS to `initialObjects`.
+
+```ts
+import { SharedMap, ShareString } from '@fluid-experimental/fluid-framework';
+
+export const containerConfig = {
+  name: 'cra-demo-container',
+  initialObjects: {
+    myMap: SharedMap,
+    myStringName: SharedString
+  },
+};
+```
+Once added, you can assign default data and then access then in the `model`, both of which are described below.
+
 ### Update the `defaultData` of those DDSes
+
+Inside of `src/config.ts` you can modify the `setDefaultData` function to change the data added to the initial DDSes upon container creation. Any `initialObjects` specified above will be available on `fluidContainer.initialObjects`. 
+
+
+```ts
+export const setDefaultData = (fluidContainer: FluidContainer) => {
+  const { myMap, myStringName } = fluidContainer.intitialObjects;
+  ...
+}
+```
 
 ### Update the `model` to access and modify your Fluid data
 
