@@ -4,7 +4,6 @@
 
 ### Overview
 
-
 This repo is a Fluid starter template that was created to answer the question "how do I create a Fluid app that is more complex than Hello World?" To answer this question this repo makes the following assumptions:
 
 1. You want to use React for your view
@@ -12,6 +11,7 @@ This repo is a Fluid starter template that was created to answer the question "h
 3. You want a light state management framework to remove the boilerplate needed to store, access and modify React app state
 
 In the readme below we'll walk you through how to do the following:
+
 ### Using this repo
 
 - Run the app locally
@@ -27,6 +27,7 @@ In the readme below we'll walk you through how to do the following:
 - Write custom events
 
 ### Modifying the view
+
 - Modify the store
   - `initialState`
   - `queries`
@@ -36,11 +37,9 @@ In the readme below we'll walk you through how to do the following:
   - Using `queries`
   - Dispatching `actions`
 
-
 ## Using this repo
 
-
-###  Run the app locally
+### Run the app locally
 
 ```bash
 npm i
@@ -50,6 +49,7 @@ npm start
 ```
 
 To run our local server, Tinylicious, on the default values of `localhost:7070`, please enter the following into a terminal window:
+
 ```
 npx tinylicous
 ```
@@ -66,10 +66,13 @@ To see how this is working, please take a look at `config.ts` where you will see
 ```typescript
 export const connectionConfig: FrsConnectionConfig = useFrs
   ? {
-      tenantId: '',
-      tokenProvider: new InsecureTokenProvider('', user),
-      orderer: '',
-      storage: '',
+      tenantId: 'YOUR-TENANT-ID-HERE',
+      tokenProvider: new FrsAzFunctionTokenProvider('YOUR-AZURE-FUNCTION-URL-HERE', {
+        userId: user.id,
+        userName: (user as any).name,
+      }),
+      orderer: 'YOUR-ORDERER-URL-HERE',
+      storage: 'YOUR-STORAGE-URL-HERE',
     }
   : {
       tenantId: 'local',
@@ -78,19 +81,36 @@ export const connectionConfig: FrsConnectionConfig = useFrs
       storage: 'http://localhost:7070',
     };
 ```
-When just starting the app with `npm run start`, the `useFrs` value here is false and the second set of values will be used. Here, we see that our orderer and storage URLs that point to the service are directed towards 'http://localhost:7070'. The `user` object being passed into the `InsecureTokenProvider` will identify the current member in the application.
+
+When just starting the app with `npm run start`, the `useFrs` value here is false and the second set of values will be used. Here, we see that our orderer and storage URLs that point to the service are directed towards 'http://localhost:7070'. The `user` object being passed into the `InsecureTokenProvider` will identify the current member's user ID and user name in the application.
 
 ### Run the app against an FRS instance
 
-To run the app against a deployed FRS instance, the first set of `connectionConfig` values in `config.ts` need to be updated as the `useFrs` boolean will now be set to true. The tenant ID, orderer, and storage URLs should match those provided to you as part of the FRS onboarding process. The tenant key should be the first parameter given to the `InsecureTokenProvider`.
+To run the app against a deployed FRS instance, the first set of `connectionConfig` values in `config.ts` need to be updated as the `useFrs` boolean will now be set to true. The tenant ID, orderer, and storage URLs should match those provided to you as part of the FRS onboarding process.
 
-NOTE: Please replace this with another implementation of the `ITokenProvider` that will not expose the tenant key in the client code itself.
+As we can see, the `tokenProvider` value here is now an `FrsAzFunctionTokenProvider` which will make a request to an Azure function to return a signed token for the provided user. This is done so that the tenant key, that is also provided during FRS onboarding, does not need to be stored on client-side code. Instead, the Azure function is responsible for fetching the appropriate key for the `tenantId` we provided and signing the token using it. Please see [this repo](https://github.com/microsoft/FrsAzureFunctions) to clone an example Azure function that provides the API that this token provider would use.
+
+Once our Azure function is set up, we just need to pass in the URL for it to the `FrsAzFunctionTokenProvider` constructor.
 
 After filling these values in, please run the following commands in a terminal window:
+
 ```
 npm i
 npm run start:frs
 ```
+
+NOTE: It is possible to insecurely run the application against FRS without an Azure function. However, this risks exposing the tenant key in the client-side code and should only be used for testing purposes, like so:
+
+```typescript
+const connectionConfig = {
+  tenantId: 'YOUR-TENANT-ID-HERE',
+  tokenProvider: new InsecureTokenProvider('YOUR-TENANT-KEY-HERE', user),
+  orderer: 'YOUR-ORDERER-URL-HERE',
+  storage: 'YOUR-STORAGE-URL-HERE',
+};
+```
+
+Please replace this with another implementation of the `ITokenProvider`, such as the `FrsAzFunctionTokenProvider` that will not expose the tenant key in the client code itself.
 
 ### Deploy the app
 
@@ -105,7 +125,6 @@ npm run start:frs
 ### Update the `model` to access and modify your Fluid data
 
 ### Write custom events
-
 
 ## Modifying the view
 
