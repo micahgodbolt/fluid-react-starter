@@ -24,14 +24,13 @@ export const useGetDiceStore = () =>
         let newState;
         switch (payload.type) {
             case "singleChange":
-                const modifiedKey = payload.key;
+                const modifiedKey = payload.changed.key;
                 const changedItem = { [modifiedKey]: model.getNode(modifiedKey) }
                 newState = { ...state, ...changedItem };
                 break;
             case "singleDelete":
-                const tempState = {...state};
-                delete tempState[payload.key];
-                newState = tempState;
+                const {[payload.changed.key]: removedItem, ...rest} = state;
+                newState = rest;
                 break;
             default: {
                 newState = getLoadState(model);

@@ -14,11 +14,12 @@ export class FluidModel extends EventEmitter {
     super();
     this.map = container.initialObjects.myMap as ISharedMap;
     this.map.on("valueChanged", (changed, local, op, target) => {
-      if (!this.checkIfNodeExists(changed.key)) {
-        this.emit("modelChanged", {type: "singleDelete", key: changed.key});
+      if (!this.nodeExists(changed.key)) {
+        const deleteNodePayload: EventPayload  = {type: "singleDelete", changed}
+        this.emit("modelChanged", deleteNodePayload );
       } else {
-        const payload ={type: "singleChange", key: changed.key}
-        this.emit("modelChanged", payload);
+        const changedNodePayload: EventPayload  = {type: "singleChange", changed}
+        this.emit("modelChanged", changedNodePayload);
       }
     })       
   }
@@ -27,7 +28,7 @@ export class FluidModel extends EventEmitter {
     return Array.from(this.map.keys());
   };
 
-  private checkIfNodeExists = (id: string) => {
+  private nodeExists = (id: string) => {
     return this.getAllNodeIds().includes(id)
   }
 
