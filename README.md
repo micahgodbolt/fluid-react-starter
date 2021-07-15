@@ -4,13 +4,43 @@
 
 ### Overview
 
-This repo is aimed towards providing a starting example for developers that includes a Fluid data model, a React view, and a set of actions and queries that provide a separation-of-concerns between view and data in the application.
 
-###  Starting the Application
+This repo is a Fluid starter template that was created to answer the question "how do I create a Fluid app that is more complex than Hello World?" To answer this question this repo makes the following assumptions:
 
-#### Running Against Tinylicious Locally
+1. You want to use React for your view
+2. You want to keep clear separation between your model and view
+3. You want a light state management framework to remove the boilerplate needed to store, access and modify React app state
 
-To start:
+In the readme below we'll walk you through how to do the following:
+### Using this repo
+
+- Run the app locally
+- Run the app against an FRS instance
+- Deploy the app
+- Repo structure overview
+
+### Modifying the model
+
+- Modify the schema to include additional DDSes
+- Update the `defaultData` of those DDSes
+- Update the `model` to access and modify your Fluid data
+- Write custom events
+
+### Modifying the view
+- Modify the store
+  - `initialState`
+  - `queries`
+  - `actions`
+  - `reducer`
+- Importing and using the store
+  - Using `queries`
+  - Dispatching `actions`
+
+
+## Using this repo
+
+
+###  Run the app locally
 
 ```bash
 npm i
@@ -19,44 +49,30 @@ npx tinylicious
 npm start
 ```
 
-This repo was created after being asked "how do I create a Fluid app that is more complex than Hello World?" We want to be able to answer this question, but to do so we need to make a few assumptions:
 
-This is a starter repo for complex a Fluid appliation that makes the following assumptions:
-
-1. You want to use React for your Fluid Application
-2. You want to keep clear separation between your model and view
-3. You want a light state management framework to remove the boilerplate needed to store, access and modify React app state
+### Run the app against an FRS instance
 
 
+### Deploy the app
 
-In the readme below we'll walk you through how to do the following:
+### Repo structure overview
 
+## Modifing the model
 
-### Using this repo
+### Modify the schema to include additional DDSes
 
-- Repo structure
-- Using the repo locally
-- Running against an FRS instance
-- Deploying the application
+### Update the `defaultData` of those DDSes
 
-### Modifying the model
-- Modify the schema to include additional DDSes
-- Update the `defaultData` of those DDSes
-- Update the `model` to access and modify your Fluid data
+### Update the `model` to access and modify your Fluid data
 
-### Modifying the view
-- Creating/Modifying the store
-
-### Changing the model
-- Modifying the initialObjects
-- Updating default data
-- Adding getters and setters to the model
-- Modifying the store (initialValue, reducer, queries, actions)
-  - creating new queries
-  - creating new actions
-- using queries and actions in the view
+### Write custom events
 
 
+## Modifying the view
+
+### Modify the store
+
+### Import and use the store
 
 ## Contributing
 

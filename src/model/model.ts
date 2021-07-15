@@ -6,6 +6,7 @@ import { Node } from './types';
 type EventPayload = {
   type: string;
   changed: IValueChanged;
+  data?: any;
 };
 
 export class FluidModel extends EventEmitter {
@@ -15,13 +16,13 @@ export class FluidModel extends EventEmitter {
     this.map = container.initialObjects.myMap as ISharedMap;
     this.map.on("valueChanged", (changed, local, op, target) => {
       if (!this.nodeExists(changed.key)) {
-        const deleteNodePayload: EventPayload  = {type: "singleDelete", changed}
-        this.emit("modelChanged", deleteNodePayload );
+        const deleteNodePayload: EventPayload = { type: "singleDelete", changed }
+        this.emit("modelChanged", deleteNodePayload);
       } else {
-        const changedNodePayload: EventPayload  = {type: "singleChange", changed}
+        const changedNodePayload: EventPayload = { type: "singleChange", changed }
         this.emit("modelChanged", changedNodePayload);
       }
-    })       
+    })
   }
 
   public getAllNodeIds = (): string[] => {
@@ -53,7 +54,7 @@ export class FluidModel extends EventEmitter {
     this.map.set(id, data);
   };
 
-  public deleteNode = (id:string) => {
+  public deleteNode = (id: string) => {
     this.map.delete(id);
   }
 
