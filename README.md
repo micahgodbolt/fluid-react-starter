@@ -49,9 +49,48 @@ npx tinylicious
 npm start
 ```
 
+To run a local Tinylicious server using the default configuration, enter the following into the terminal:
+```
+npx tinylicous
+```
+
+Now, with our local service running in the background, we need to connect the application to it. The app has already been configured to this so now we just need to run the following in a new terminal window to start the app.
+
+```bash
+npm i
+npm run start
+```
+
+To see how this is working, take a look at `config.ts` where you will see the following values specified:
+
+```typescript
+export const connectionConfig: FrsConnectionConfig = useFrs
+  ? {
+      tenantId: '',
+      tokenProvider: new InsecureTokenProvider('', user),
+      orderer: '',
+      storage: '',
+    }
+  : {
+      tenantId: 'local',
+      tokenProvider: new InsecureTokenProvider('fooBar', user),
+      orderer: 'http://localhost:7070',
+      storage: 'http://localhost:7070',
+    };
+```
+When just starting the app with `npm run start`, the `useFrs` value here is false and the second set of values will be used. Here, we see that our orderer and storage URLs that point to the service are directed towards 'http://localhost:7070'. The `user` object being passed into the `InsecureTokenProvider` will identify the current member in the application.
 
 ### Run the app against an FRS instance
 
+To run the app against a deployed FRS instance, the first set of `connectionConfig` values in `config.ts` need to be updated as the `useFrs` boolean will now be set to true. The tenant ID, orderer, and storage URLs should match those provided to you as part of the FRS onboarding process. The tenant key should be the first parameter given to the `InsecureTokenProvider`.
+
+NOTE: Please replace this with another implementation of the `ITokenProvider` that will not expose the tenant key in the client code itself.
+
+After filling these values in, please run the following commands in a terminal window:
+```
+npm i
+npm run start:frs
+```
 
 ### Deploy the app
 
