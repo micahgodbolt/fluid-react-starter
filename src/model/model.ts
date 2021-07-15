@@ -13,15 +13,23 @@ export class FluidModel extends EventEmitter {
   constructor(private container: FluidContainer, private services: FrsContainerServices) {
     super();
     this.map = container.initialObjects.myMap as ISharedMap;
-    this.map.on('valueChanged', (changed, local, op, target) => {
-      const payload: EventPayload = { type: 'itemChanged', changed };
-      this.emit('modelChanged', payload);
-    });
+    this.map.on("valueChanged", (changed, local, op, target) => {
+      if (!this.checkIfNodeExists(changed.key)) {
+        this.emit("modelChanged", {type: "singleDelete", key: changed.key});
+      } else {
+        const payload ={type: "singleChange", key: changed.key}
+        this.emit("modelChanged", payload);
+      }
+    })       
   }
 
   public getAllNodeIds = (): string[] => {
     return Array.from(this.map.keys());
   };
+
+  private checkIfNodeExists = (id: string) => {
+    return this.getAllNodeIds().includes(id)
+  }
 
   public getNode = (id: string): Node => {
     const node = this.map.get<Node>(id);
@@ -43,6 +51,10 @@ export class FluidModel extends EventEmitter {
   public editNode = (id: string, data: Partial<Node>) => {
     this.map.set(id, data);
   };
+
+  public deleteNode = (id:string) => {
+    this.map.delete(id);
+  }
 
   public createNode = (id: string, data: Node) => {
     if (this.map.get(id)) {

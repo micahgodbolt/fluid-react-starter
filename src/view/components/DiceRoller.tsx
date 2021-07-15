@@ -3,13 +3,15 @@ interface IDiceRollerProps {
   id: string;
   value: number;
   updateValue: (id: string) => void;
+  onDelete: (id: string) => void;
 }
 
 export const DiceRoller = (props: IDiceRollerProps) => {
-  const { id, updateValue } = props;
+  const { id, updateValue, onDelete } = props;
 
   const diceCharacter = String.fromCodePoint(0x267f + props.value);
   const rollDice = () => updateValue(id);
+  const deleteDice = () => onDelete(id);
 
   return (
     <div>
@@ -22,10 +24,13 @@ export const DiceRoller = (props: IDiceRollerProps) => {
       >
         {diceCharacter}
       </div>
-      <button style={{ fontSize: 50 }} onClick={rollDice}>
-        Roll
+      <button style={{ fontSize: 20 }} onClick={rollDice}>
+        Roll 
       </button>
-      <div style={{ fontSize: 12 }}>{id.split('-')[0]}</div>
+      <button style={{ fontSize: 20 }} onClick={deleteDice}>
+        Delete 
+      </button>
+      <div style={{fontSize: 12}}>{id.split('-')[0]}</div>
     </div>
   );
 };
