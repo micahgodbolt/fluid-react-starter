@@ -1,6 +1,5 @@
 import { SharedMap, ISharedMap, FluidContainer } from '@fluid-experimental/fluid-framework';
 import { FrsConnectionConfig, InsecureTokenProvider } from '@fluid-experimental/frs-client';
-import { generateUser } from '@fluidframework/server-services-client';
 import { FrsAzFunctionTokenProvider } from './utils/FrsAzFunctionTokenProvider';
 
 ////
@@ -45,15 +44,12 @@ export const setDefaultData = (fluidContainer: FluidContainer) => {
 
 export const useFrs: boolean = process.env.REACT_APP_USE_FRS !== undefined;
 
-export const user = generateUser();
+export const user = { id: "test-user", name: "TestUser" }
 
 export const connectionConfig: FrsConnectionConfig = useFrs
   ? {
       tenantId: 'YOUR-TENANT-ID-HERE',
-      tokenProvider: new FrsAzFunctionTokenProvider('YOUR-AZURE-FUNCTION-URL-HERE', {
-        userId: user.id,
-        userName: (user as any).name,
-      }),
+      tokenProvider: new FrsAzFunctionTokenProvider('YOUR-AZURE-FUNCTION-URL-HERE', user),
       orderer: 'YOUR-ORDERER-URL-HERE',
       storage: 'YOUR-STORAGE-URL-HERE',
     }

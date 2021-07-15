@@ -7,8 +7,8 @@ import { ITokenProvider, ITokenResponse } from "@fluidframework/routerlicious-dr
 import axios from "axios";
 
 export interface FrsAzFuncUser {
-    userId: string;
-    userName: string;
+    id: string;
+    name: string;
 }
 
 export class FrsAzFunctionTokenProvider implements ITokenProvider {
@@ -34,8 +34,8 @@ export class FrsAzFunctionTokenProvider implements ITokenProvider {
             params: {
                 tenantId,
                 documentId,
-                userId: this.user?.userId,
-                userName: this.user?.userName,
+                userId: this.user?.id,
+                userName: this.user?.name,
             },
         }).then((response) => {
             return response.data as string;
