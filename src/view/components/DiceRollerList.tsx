@@ -6,8 +6,8 @@ import { useGetDiceStore } from '../store';
 export const DiceRollerList = () => {
   const {
     dispatch,
-    actions: { editDice, createDice },
-    queries: { getAllDice, getByValue },
+    actions: { editDice, createDice, deleteDice },
+    queries: { getAllDice, getByValue }
   } = useGetDiceStore();
 
   const randomizeDice = (id: string) =>
@@ -19,20 +19,34 @@ export const DiceRollerList = () => {
     );
 
   const handleClick = () => dispatch(createDice({ id: uuid(), props: { value: 1 } }));
+  const handleDelete = (id: string) => dispatch(deleteDice({ id }));
+  const allDice = getAllDice();
+
   const handleRollAll = () => {
-    getAllDice().forEach((dice: any) => {
+    allDice.forEach((dice: any) => {
       randomizeDice(dice.key);
     });
   };
 
-  console.log(getAllDice());
 
-  const diceRollers = getAllDice().map((dice: any) => (
-    <DiceRoller key={dice.key} id={dice.key} value={dice.value} updateValue={randomizeDice} />
+  const diceRollers = allDice.map((dice: any) => (
+    <DiceRoller
+      key={dice.key}
+      id={dice.key}
+      value={dice.value}
+      updateValue={randomizeDice}
+      onDelete={handleDelete}
+    />
   ));
 
   const sixes = getByValue(6).map((dice: any) => (
-    <DiceRoller key={dice.key} id={dice.key} value={dice.value} updateValue={randomizeDice} />
+    <DiceRoller
+      key={dice.key}
+      id={dice.key}
+      value={dice.value}
+      onDelete={handleDelete}
+      updateValue={randomizeDice}
+    />
   ));
 
   return (
