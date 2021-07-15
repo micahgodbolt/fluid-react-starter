@@ -3,7 +3,7 @@ import { EventEmitter } from 'events';
 import { FrsContainerServices } from '@fluid-experimental/frs-client';
 import { Node } from './types';
 
-type EventPayload = {
+export type EventPayload = {
   type: string;
   changed: IValueChanged;
   data?: any;
