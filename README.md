@@ -49,7 +49,7 @@ npx tinylicious
 npm start
 ```
 
-To run our local server, Tinylicious, on the default values of `localhost:7070`, please enter the following into a terminal window:
+To run a local Tinylicious server using the default configuration, enter the following into the terminal:
 ```
 npx tinylicous
 ```
@@ -61,7 +61,7 @@ npm i
 npm run start
 ```
 
-To see how this is working, please take a look at `config.ts` where you will see the following values specified.
+To see how this is working, take a look at `config.ts` where you will see the following values specified:
 
 ```typescript
 export const connectionConfig: FrsConnectionConfig = useFrs
