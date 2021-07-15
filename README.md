@@ -41,13 +41,6 @@ In the readme below we'll walk you through how to do the following:
 
 ### Run the app locally
 
-```bash
-npm i
-npx tinylicious
-// open new terminal tab
-npm start
-```
-
 To run our local server, Tinylicious, on the default values of `localhost:7070`, please enter the following into a terminal window:
 
 ```
