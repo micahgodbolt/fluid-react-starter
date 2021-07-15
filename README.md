@@ -106,8 +106,52 @@ Please replace this with another implementation of the `ITokenProvider`, such as
 
 ### Deploy the app
 
+To deploy this application and get a URL that we can share with other people in a non-local context, we will be using an Azure App Service.
 
-## Modifing the model
+#### Bundling app code
+
+Once you have completed local development using the instructions above, we need to first prepare the JS bundle to send to the app service. For this, please run the following command from the root directory:
+
+`npm run build`
+
+This will package the application in the form where it was connected to FRS, i.e. while running `npm run start:frs` before.
+
+Now, we should see a new `/build` folder in our application root directory holding the JS bundle. 
+
+#### Creating an App Service
+
+To send it to our app service, we will be using the [Azure App Service VS Code Extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azureappservice)
+
+Once you've logged in to your Azure account on the extension, please use the following steps to create a new app service (if you already have one created, you can skip these):
+1. Use Ctrl+Shift+P to open the command palette.
+
+2. Enter "create web" then select Azure App Service: Create New Web App...Advanced.
+
+3. You use the advanced command to have full control over the deployment including resource group, App Service Plan, and operating system rather than use Linux defaults.
+
+Respond to the prompts as follows:
+
+- Select your Subscription account.
+- For "Enter a globally unique name", enter a name that's unique across all of Azure. Use only alphanumeric characters ('A-Z', 'a-z', and '0-9') and hyphens ('-')
+- Select "Create new resource group" and provide a name like "TutorialApp-rg".
+- Select the Linux operating system.
+- Select "Create a new App Service plan", provide a name like "TutorialApp-plan", and select the "F1 Free" pricing tier.
+- Select "Skip for now" for the Application Insights resource.
+- Select a location near you.
+- After a short time, VS Code notifies you that creation is complete. Close the notification with the X button.
+
+#### Deploying app code
+
+Once the app has been created (or if you're using an existing one), right-click on it in the list of App Services within the extension pane.
+Then, select the option "Deploy to Web App...".
+
+This will bring up a prompt to "Select the folder to deploy". Browse to the `./build` folder and select it.
+
+You should now see a notification indicating that deployment is commencing and you can view the output in a terminal window. Once it is completed, click on "Browse Website" to open up the app home page.
+
+Now, you can start sharing links for different created containers. After clicking on "Create" from the home page, the app url will be of the format `https://{YOUR-APPSERVICE-NAME}.azurewebsites.net/fluid/{CONTAINER-ID}`. Any users who have the page open with the same container ID should now be able to collaborate with one another!
+
+## Modifying the model
 
 ### Modify the schema to include additional DDSes
 
