@@ -61,7 +61,7 @@ npm i
 npm run start
 ```
 
-To see how this is working, please take a look at `config.ts` where you will see the following values specified.
+To see how this is working, take a look at `config.ts` where you will see the following values specified:
 
 ```typescript
 export const connectionConfig: FrsConnectionConfig = useFrs
