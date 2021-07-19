@@ -108,6 +108,8 @@ Please replace this with another implementation of the `ITokenProvider`, such as
 
 To deploy this application and get a URL that we can share with other people in a non-local context, we will be using an Azure App Service.
 
+NOTE: These instructions are for deploying the front-end web application that we are building in this repo, not the backend FRS instance itself. Obtaining an already deployed FRS tenant ID is a pre-requisite for this as the local Tinylicious service instance will not work for remote deployments.
+
 #### Pre-requisites
 
 - An Azure subscription where we can deploy the app service. If you do not already have one, please see the [Microsoft Developer Program](https://developer.microsoft.com/en-us/microsoft-365/dev-program) page to see how you can set a new one 
