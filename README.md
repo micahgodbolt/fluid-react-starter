@@ -112,7 +112,7 @@ NOTE: These instructions are for deploying the front-end web application that we
 
 #### Pre-requisites
 
-- An Azure subscription where we can deploy the app service. If you do not already have one, please see the [Microsoft Developer Program](https://developer.microsoft.com/en-us/microsoft-365/dev-program) page to see how you can set a new one 
+- An Azure subscription is required in order to deploy the app service. If you do not already have one, please see the [Microsoft Developer Program](https://developer.microsoft.com/en-us/microsoft-365/dev-program) page to see how you can set a new one 
 
 We also need to set up the app to connect to FRS using the instructions identified above. The requirements for them are:
 - An FRS tenant ID, orderer URL, and storage URL. This will have been provided to you as part of the FRS onboarding process
