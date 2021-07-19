@@ -76,7 +76,7 @@ export const connectionConfig: FrsConnectionConfig = useFrs
 
 When just starting the app with `npm run start`, the `useFrs` value here is false and the second set of values will be used. Here, we see that our orderer and storage URLs that point to the service are directed towards 'http://localhost:7070'. The `user` object being passed into the `InsecureTokenProvider` will identify the current member's user ID and user name in the application.
 
-### Run the app against an FRS instance
+### Run the app against an Azure Fluid Relay service (FRS) instance
 
 To run the app against a deployed FRS instance, the first set of `connectionConfig` values in `config.ts` need to be updated as the `useFrs` boolean will now be set to true. The tenant ID, orderer, and storage URLs should match those provided to you as part of the FRS onboarding process.
 
@@ -108,6 +108,14 @@ Please replace this with another implementation of the `ITokenProvider`, such as
 
 To deploy this application and get a URL that we can share with other people in a non-local context, we will be using an Azure App Service.
 
+#### Pre-requisites
+
+- An Azure subscription where we can deploy the app service. If you do not already have one, please see the [Microsoft Developer Program](https://developer.microsoft.com/en-us/microsoft-365/dev-program) page to see how you can set a new one 
+
+We also need to set up the app to connect to FRS using the instructions identified above. The requirements for them are:
+- An FRS tenant ID, orderer URL, and storage URL. This will have been provided to you as part of the FRS onboarding process
+- An Azure Function that will be used to request the JWT token to authenticate against FRS. This URL for this will either be provided for you with the FRS onboarding information or you can set one up yourself similar to [here](https://github.com/microsoft/FrsAzureFunctions)
+
 #### Bundling app code
 
 Once you have completed local development using the instructions above, we need to first prepare the JS bundle to send to the app service. For this, please run the following command from the root directory:
@@ -122,10 +130,12 @@ Now, we should see a new `/build` folder in our application root directory holdi
 
 To send it to our app service, we will be using the [Azure App Service VS Code Extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azureappservice)
 
-Once you've logged in to your Azure account on the extension, please use the following steps to create a new app service (if you already have one created, you can skip these):
+Once you've logged in to your Azure account on the extension, please use the following steps to create a new [app service](https://docs.microsoft.com/en-us/azure/app-service/overview) (if you already have one created, you can skip these):
 1. Use Ctrl+Shift+P to open the command palette.
 
 2. Enter "create web" then select Azure App Service: Create New Web App...Advanced.
+
+<img src='./documentation/Create.PNG' style="height: 80px">
 
 3. You use the advanced command to have full control over the deployment including resource group, App Service Plan, and operating system rather than use Linux defaults.
 
@@ -145,9 +155,19 @@ Respond to the prompts as follows:
 Once the app has been created (or if you're using an existing one), right-click on it in the list of App Services within the extension pane.
 Then, select the option "Deploy to Web App...".
 
+<img src='./documentation/Deploy.PNG' style="height: 400px">
+
 This will bring up a prompt to "Select the folder to deploy". Browse to the `./build` folder and select it.
 
-You should now see a notification indicating that deployment is commencing and you can view the output in a terminal window. Once it is completed, click on "Browse Website" to open up the app home page.
+<img src='./documentation/Folder.PNG' style="height: 300px">
+
+You should now see a notification indicating that deployment is commencing and you can view the output in a terminal window.
+
+<img src='./documentation/Notification.PNG' style="height: 50px">
+
+Once it is completed, click on "Browse Website" to open up the app home page.
+
+<img src='./documentation/Complete.PNG' style="height: 100px">
 
 Now, you can start sharing links for different created containers. After clicking on "Create" from the home page, the app url will be of the format `https://{YOUR-APPSERVICE-NAME}.azurewebsites.net/fluid/{CONTAINER-ID}`. Any users who have the page open with the same container ID should now be able to collaborate with one another!
 
