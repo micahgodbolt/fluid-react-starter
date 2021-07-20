@@ -1,6 +1,6 @@
 import { ISharedMap, FluidContainer, IValueChanged } from '@fluid-experimental/fluid-framework';
 import { EventEmitter } from 'events';
-import { FrsContainerServices } from '@fluid-experimental/frs-client';
+import { FrsContainerServices, FrsMember, IFrsAudience } from '@fluid-experimental/frs-client';
 import { Node } from './types';
 
 export type EventPayload = {
@@ -11,9 +11,11 @@ export type EventPayload = {
 
 export class FluidModel extends EventEmitter {
   private map: ISharedMap;
+  private audience: IFrsAudience;
   constructor(private container: FluidContainer, private services: FrsContainerServices) {
     super();
     this.map = container.initialObjects.myMap as ISharedMap;
+    this.audience = services.audience;
     this.map.on("valueChanged", (changed, local, op, target) => {
       if (!this.nodeExists(changed.key)) {
         const deleteNodePayload: EventPayload = { type: "singleDelete", changed }
@@ -23,6 +25,16 @@ export class FluidModel extends EventEmitter {
         this.emit("modelChanged", changedNodePayload);
       }
     })
+    this.audience.on("membersChanged", (members) => {
+      const membersChangedPayload = { type: "membersChanged" };
+      this.emit("modelChanged", membersChangedPayload);
+    })
+  }
+
+  public getAudience = (): FrsMember[] => {
+    const members = Array.from(this.audience.getMembers().values());
+
+    return members; 
   }
 
   public getAllNodeIds = (): string[] => {

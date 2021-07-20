@@ -1,3 +1,4 @@
+import { FrsMember } from '@fluid-experimental/frs-client';
 import { FluidModel } from '../model';
 import { Node } from '../model/types';
 import { useGetStore } from '../utils/hooks';
@@ -53,3 +54,15 @@ export const useGetDiceStore = () => useGetStore<Record<string, Node>>({
     return newState;
   },
 });
+
+
+export const useGetAudienceStore = () => useGetStore<FrsMember[]>({
+  initialState: (model) => model.getAudience(),
+  queries: {
+    getAudienceSize: (state) => state.length
+  },
+  actions: {},
+  reducer: (model, state, {type}) => {
+    return model.getAudience();
+  }
+})
