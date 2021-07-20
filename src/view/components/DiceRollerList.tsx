@@ -1,7 +1,7 @@
 import React from 'react';
 import { v4 as uuid } from 'uuid';
 import { DiceRoller } from './DiceRoller';
-import { useGetDiceStore } from '../store';
+import { useGetDiceStore, useGetAudienceStore } from '../store';
 
 export const DiceRollerList = () => {
   const {
@@ -9,6 +9,9 @@ export const DiceRollerList = () => {
     actions: { editDice, createDice, deleteDice },
     queries: { getAllDice, getByValue }
   } = useGetDiceStore();
+
+  const {queries: {getAudienceSize}} = useGetAudienceStore();
+
 
   const randomizeDice = (id: string) =>
     dispatch(
@@ -51,6 +54,8 @@ export const DiceRollerList = () => {
 
   return (
     <div style={{ textAlign: 'center' }}>
+      <div>Audience Size: {getAudienceSize()}</div>
+
       <button style={{ margin: '5vh', fontSize: 20 }} onClick={handleClick}>
         Create Dice Roller
       </button>
@@ -58,6 +63,7 @@ export const DiceRollerList = () => {
       <button style={{ margin: '5vh', fontSize: 20 }} onClick={handleRollAll}>
         Roll All
       </button>
+
       <div style={{ display: 'flex', flexWrap: 'wrap', marginBottom: '5em' }}> {diceRollers} </div>
       <hr />
       <h1>Sixes</h1>

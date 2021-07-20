@@ -53,3 +53,15 @@ export const useGetDiceStore = () => useGetStore<Record<string, Node>>({
     return newState;
   },
 });
+
+
+export const useGetAudienceStore = () => useGetStore<{id: string, mode: string}[]>({
+  initialState: (model) => model.getAudience(),
+  queries: {
+    getAudienceSize: (state) => state.length
+  },
+  actions: {},
+  reducer: (model, state, {type}) => {
+    return model.getAudience();
+  }
+})

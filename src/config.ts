@@ -9,7 +9,7 @@ import { FrsAzFunctionTokenProvider } from './utils/FrsAzFunctionTokenProvider';
 export const containerConfig = {
   name: 'cra-demo-container',
   initialObjects: {
-    myMap: SharedMap,
+    myMap: SharedMap
   },
 };
 
