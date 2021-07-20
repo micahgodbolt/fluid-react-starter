@@ -1,8 +1,7 @@
 import { ISharedMap, FluidContainer, IValueChanged } from '@fluid-experimental/fluid-framework';
 import { EventEmitter } from 'events';
-import { FrsContainerServices, IFrsAudience } from '@fluid-experimental/frs-client';
+import { FrsContainerServices, FrsMember, IFrsAudience } from '@fluid-experimental/frs-client';
 import { Node } from './types';
-import { user } from '../config';
 
 export type EventPayload = {
   type: string;
@@ -32,10 +31,10 @@ export class FluidModel extends EventEmitter {
     })
   }
 
-  public getAudience = (): {id: string, mode: string}[] => {
-    const members = Object.fromEntries(this.audience.getMembers());
+  public getAudience = (): FrsMember[] => {
+    const members = Array.from(this.audience.getMembers().values());
 
-    return members[user.id]['connections']; 
+    return members; 
   }
 
   public getAllNodeIds = (): string[] => {
