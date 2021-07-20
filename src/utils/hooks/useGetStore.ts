@@ -4,7 +4,7 @@ import { useModel } from './';
 
 interface UseGetStoreProps<
   S,
-  A extends { [id: string]: (...args: any) => any },
+  A extends { [id: string]: (payload: any) => void },
   Q extends { [id: string]: (...args: any) => any }
 > {
   initialState: (model: FluidModel) => S;
@@ -28,7 +28,7 @@ interface UseGetStoreReturn<A, Q> {
 
 export function useGetStore<
   S,
-  A extends { [id: string]: (...args: any) => any },
+  A extends { [id: string]: (payload: any) => void },
   Q extends { [id: string]: (...args: any) => any }
 >(props: UseGetStoreProps<S, A, Q>): UseGetStoreReturn<A, Q> {
   const model = useModel();
