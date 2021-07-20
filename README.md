@@ -146,7 +146,7 @@ Respond to the prompts as follows:
 - Select your Subscription account.
 - For "Enter a globally unique name", enter a name that's unique across all of Azure. Use only alphanumeric characters ('A-Z', 'a-z', and '0-9') and hyphens ('-')
 - Select "Create new resource group" and provide a name like "TutorialApp-rg".
-- Select the Linux operating system.
+- Select the Windows operating system.
 - Select "Create a new App Service plan", provide a name like "TutorialApp-plan", and select the "F1 Free" pricing tier.
 - Select "Skip for now" for the Application Insights resource.
 - Select a location near you.
