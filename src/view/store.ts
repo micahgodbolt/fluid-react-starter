@@ -3,12 +3,23 @@ import { FluidModel } from '../model';
 import { Node } from '../model/types';
 import { useGetStore } from '../utils/hooks';
 
-const getDiceArray = (state: any) =>
+const getDiceArray = (state: Record<string, Node>): Node[] =>
   Object.keys(state).map((key: string) => ({ key, value: state[key].value }));
 
 const getLoadState = (model: FluidModel) => model.getAllNodes();
 
-export const useGetDiceStore = () => useGetStore<Record<string, Node>>({
+type IDiceQueries = {
+  getAllDice: () => Node[],
+  getByValue: (value: number) => Node[],
+}
+
+type IDiceActions = {
+  editDice: (payload: { id: string, props: { value: number } }) => void;
+  createDice: (payload: { id: string, props: { value: number } }) => void;
+  deleteDice: (payload: { id: string }) => void;
+}
+
+export const useGetDiceStore = () => useGetStore<Record<string, Node>, IDiceActions, IDiceQueries>({
 
   // Establish initial state on load
   initialState: (model) => getLoadState(model),
@@ -55,8 +66,11 @@ export const useGetDiceStore = () => useGetStore<Record<string, Node>>({
   },
 });
 
+type IAudienceQueries = {
+  getAudienceSize: () => number;
+}
 
-export const useGetAudienceStore = () => useGetStore<FrsMember[]>({
+export const useGetAudienceStore = () => useGetStore<FrsMember[], {}, IAudienceQueries>({
   initialState: (model) => model.getAudience(),
   queries: {
     getAudienceSize: (state) => state.length

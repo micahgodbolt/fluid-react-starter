@@ -2,20 +2,35 @@ import React from 'react';
 import { FluidModel, EventPayload } from '../../model';
 import { useModel } from './';
 
-interface UseGetStoreProps<TState = any> {
-  initialState: (model: FluidModel) => TState;
-  actions: Record<string, (model: FluidModel, payload: any) => void>;
-  queries: Record<string, (state: TState, props: any) => void>;
-  reducer: (model: FluidModel, state: TState, payload: EventPayload) => void;
+interface UseGetStoreProps<
+  S,
+  A extends { [id: string]: (payload: any) => void },
+  Q extends { [id: string]: (...args: any) => any }
+> {
+  initialState: (model: FluidModel) => S;
+  actions: {
+    [Property in keyof A]: (model: FluidModel, payload: Parameters<A[Property]>[0]) => void;
+  };
+  queries: {
+    [Property in keyof Q]: (
+      state: S,
+      ...params: Parameters<Q[Property]>
+    ) => ReturnType<ReturnType<Q[Property]>>;
+  };
+  reducer: (model: FluidModel, state: S, payload: EventPayload) => void;
 }
 
-interface UseGetStoreReturn {
+interface UseGetStoreReturn<A, Q> {
   dispatch: (payload: any) => void;
-  actions: Record<string, (payload: any) => void>;
-  queries: Record<string, (props?: any) => any>;
+  actions: A;
+  queries: Q;
 }
 
-export function useGetStore<S>(props: UseGetStoreProps<S>): UseGetStoreReturn {
+export function useGetStore<
+  S,
+  A extends { [id: string]: (payload: any) => void },
+  Q extends { [id: string]: (...args: any) => any }
+>(props: UseGetStoreProps<S, A, Q>): UseGetStoreReturn<A, Q> {
   const model = useModel();
 
   const reducer = (state: any, op: any) => props.reducer(model, state, op);
@@ -56,7 +71,7 @@ export function useGetStore<S>(props: UseGetStoreProps<S>): UseGetStoreReturn {
   const queries = {} as any;
 
   for (const j in props.queries) {
-    queries[j] = (payload: any) => props.queries[j](state, payload);
+    queries[j] = (...payload: any) => props.queries[j](state, ...payload);
   }
 
   return { dispatch, actions, queries };
