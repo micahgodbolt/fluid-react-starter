@@ -1,7 +1,4 @@
 import { SharedMap, ISharedMap, FluidContainer } from '@fluid-experimental/fluid-framework';
-import { FrsConnectionConfig, InsecureTokenProvider } from '@fluid-experimental/frs-client';
-import { v4 as uuid } from "uuid";
-import { FrsAzFunctionTokenProvider } from './utils/FrsAzFunctionTokenProvider';
 
 ////
 // Container and App setup
@@ -10,7 +7,7 @@ import { FrsAzFunctionTokenProvider } from './utils/FrsAzFunctionTokenProvider';
 export const containerConfig = {
   name: 'cra-demo-container',
   initialObjects: {
-    myMap: SharedMap
+    myMap: SharedMap,
   },
 };
 
@@ -45,18 +42,8 @@ export const setDefaultData = (fluidContainer: FluidContainer) => {
 
 export const useFrs: boolean = process.env.REACT_APP_USE_FRS !== undefined;
 
-export const user = { id: uuid(), name: "TestUser" }
-
-export const connectionConfig: FrsConnectionConfig = useFrs
-  ? {
-      tenantId: 'YOUR-TENANT-ID-HERE',
-      tokenProvider: new FrsAzFunctionTokenProvider('YOUR-AZURE-FUNCTION-URL-HERE', user),
-      orderer: 'YOUR-ORDERER-URL-HERE',
-      storage: 'YOUR-STORAGE-URL-HERE',
-    }
-  : {
-      tenantId: 'local',
-      tokenProvider: new InsecureTokenProvider('fooBar', user),
-      orderer: 'http://localhost:7070',
-      storage: 'http://localhost:7070',
-    };
+export const frsTenantId = "";
+export const frsOrdererUrl = '';
+export const frsStorageUrl = '';
+export const azureFunctionUrl = "";
+export const githubClientId = "";

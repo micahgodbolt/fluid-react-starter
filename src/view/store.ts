@@ -55,10 +55,15 @@ export const useGetDiceStore = () => useGetStore<Record<string, Node>>({
   },
 });
 
+type IAudienceQueries = {
+  getAudienceSize: () => number;
+  getAudienceNames: () => string[];
+}
 
 export const useGetAudienceStore = () => useGetStore<FrsMember[]>({
   initialState: (model) => model.getAudience(),
   queries: {
+    getAudienceNames: (state) => state.map((member) => member.userName),
     getAudienceSize: (state) => state.length
   },
   actions: {},

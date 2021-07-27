@@ -8,7 +8,7 @@ export const Home = () => {
     const filePath = await createFluidFile();
     history.push(filePath);
   };
-
+  
   return (
     <div>
       <h1>Home Page</h1>

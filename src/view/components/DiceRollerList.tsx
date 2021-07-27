@@ -10,7 +10,7 @@ export const DiceRollerList = () => {
     queries: { getAllDice, getByValue }
   } = useGetDiceStore();
 
-  const {queries: {getAudienceSize}} = useGetAudienceStore();
+  const {queries: {getAudienceSize, getAudienceNames}} = useGetAudienceStore();
 
 
   const randomizeDice = (id: string) =>
@@ -30,7 +30,6 @@ export const DiceRollerList = () => {
       randomizeDice(dice.key);
     });
   };
-
 
   const diceRollers = allDice.map((dice: any) => (
     <DiceRoller
@@ -55,6 +54,7 @@ export const DiceRollerList = () => {
   return (
     <div style={{ textAlign: 'center' }}>
       <div>Audience Size: {getAudienceSize()}</div>
+      <div>Audience Members: {getAudienceNames().join(', ')}</div>
 
       <button style={{ margin: '5vh', fontSize: 20 }} onClick={handleClick}>
         Create Dice Roller
