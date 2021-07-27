@@ -1,91 +1,70 @@
 import React from 'react';
-import { v4 as uuid } from 'uuid';
-import { DiceRoller } from './DiceRoller';
 import { useGetDiceStore, useGetAudienceStore } from '../store';
-import { SearchBox } from '@fluentui/react';
+import {  DefaultButton, SearchBox } from '@fluentui/react';
 import { useGithubModel } from '../../utils';
 import { PullRequest } from '../../gitHubModel';
 import { SearchResults } from './SearchResults';
+import { Status, Node } from '../../model';
+import { PullRequestCard } from './PullRequestCard';
+import { Card } from 'semantic-ui-react';
+
 
 export const DiceRollerList = () => {
   const {
     dispatch,
     actions: { editDice, createDice, deleteDice },
-    queries: { getAllDice, getByValue }
+    queries: { getAllDice},
   } = useGetDiceStore();
 
-  const {queries: {getAudienceSize, getAudienceNames}} = useGetAudienceStore();
+  const {
+    queries: { getAudienceSize, getAudienceNames },
+  } = useGetAudienceStore();
 
   const { searchPullRequest } = useGithubModel();
+  const [ searchText, setSearchText ] = React.useState<string>("");
   const [searchResults, setSearchResults] = React.useState<PullRequest[]>([]);
 
-  const searchCallback = React.useCallback(async (query: string | undefined) => {
-    if (!query) {
-      setSearchResults([]);
-    } else {
-      const results = await searchPullRequest(query);
-      setSearchResults(results);
-    }
-  }, [searchPullRequest]);
+  const searchCallback = React.useCallback(
+    async (query: string | undefined) => {
+      if (!query) {
+        setSearchResults([]);
+      } else {
+        const results = await searchPullRequest(query);
+        setSearchResults(results);
+      }
+    },
+    [searchPullRequest]
+  );
 
-  const randomizeDice = (id: string) =>
+  const updateStatus = (node: Node, status: Status) =>
     dispatch(
       editDice({
-        id,
-        props: { value: Math.floor(Math.random() * 6) + 1 },
+        id: node.pullRequest.id,
+        props: { ...node, status },
       })
     );
 
-  const handleClick = () => dispatch(createDice({ id: uuid(), props: { value: 1 } }));
-  const handleDelete = (id: string) => dispatch(deleteDice({ id }));
-  const allDice = getAllDice();
+  const createCard = (pullRequest: PullRequest) =>
+    dispatch(createDice({ id: pullRequest.id, props: { pullRequest, status: Status.Opened } }));
 
-  const handleRollAll = () => {
-    allDice.forEach((dice: any) => {
-      randomizeDice(dice.key);
-    });
-  };
+  const deleteNode = (id: string) => dispatch(deleteDice({ id }));
+  const allPullRequests = getAllDice();
 
-  const diceRollers = allDice.map((dice: any) => (
-    <DiceRoller
-      key={dice.key}
-      id={dice.key}
-      value={dice.value}
-      updateValue={randomizeDice}
-      onDelete={handleDelete}
-    />
-  ));
-
-  const sixes = getByValue(6).map((dice: any) => (
-    <DiceRoller
-      key={dice.key}
-      id={dice.key}
-      value={dice.value}
-      onDelete={handleDelete}
-      updateValue={randomizeDice}
-    />
-  ));
+  const pullRequestCards = allPullRequests.map((node) => {
+    return <PullRequestCard node={node} onUpdateStatus={updateStatus} onDeleteNode={deleteNode}/>
+  })
 
   return (
-    <div style={{ textAlign: 'center' }}>
+    <div style={{ textAlign: 'center', margin: "3vh" }}>
       <div>Audience Size: {getAudienceSize()}</div>
       <div>Audience Members: {getAudienceNames().join(', ')}</div>
 
-      <button style={{ margin: '5vh', fontSize: 20 }} onClick={handleClick}>
-        Create Dice Roller
-      </button>
+      <Card.Group style={{margin: "4vh"}}> {pullRequestCards} </Card.Group>
+      <SearchBox placeholder="Search" onSearch={(value) => searchCallback(value)} onChange={(e) => setSearchText(e?.target.value || "")} />
+      <DefaultButton onClick={() => searchCallback(searchText)}>{"Search"}</DefaultButton>
+      <SearchResults results={searchResults} addToBoard={createCard}/>
 
-      <button style={{ margin: '5vh', fontSize: 20 }} onClick={handleRollAll}>
-        Roll All
-      </button>
-
-      <SearchBox placeholder="Search" onSearch={value => searchCallback(value)} />
-      <SearchResults results={searchResults} />
-
-      <div style={{ display: 'flex', flexWrap: 'wrap', marginBottom: '5em' }}> {diceRollers} </div>
       <hr />
-      <h1>Sixes</h1>
-      <div style={{ display: 'flex', flexWrap: 'wrap' }}> {sixes} </div>
     </div>
   );
 };

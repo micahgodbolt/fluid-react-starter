@@ -1,50 +1,51 @@
-import { DefaultButton, DetailsList, IColumn, mergeStyleSets } from "@fluentui/react";
-import React from "react";
-import { PullRequest } from "../../gitHubModel";
+import { DefaultButton, DetailsList, IColumn, mergeStyleSets, SelectionMode } from '@fluentui/react';
+import React from 'react';
+import { PullRequest } from '../../gitHubModel';
 
 interface SearchResultProps {
-    results: PullRequest[]
+  results: PullRequest[];
+  addToBoard: (pr: PullRequest) => void;
 }
 
 const classNames = mergeStyleSets({
-    fileIconHeaderIcon: {
-      padding: 0,
-      fontSize: '16px',
-    },
-    fileIconCell: {
-      textAlign: 'center',
-      selectors: {
-        '&:before': {
-          content: '.',
-          display: 'inline-block',
-          verticalAlign: 'middle',
-          height: '100%',
-          width: '0px',
-          visibility: 'hidden',
-        },
+  fileIconHeaderIcon: {
+    padding: 0,
+    fontSize: '16px',
+  },
+  fileIconCell: {
+    textAlign: 'center',
+    selectors: {
+      '&:before': {
+        content: '.',
+        display: 'inline-block',
+        verticalAlign: 'middle',
+        height: '100%',
+        width: '0px',
+        visibility: 'hidden',
       },
     },
-    fileIconImg: {
-      verticalAlign: 'middle',
-      maxHeight: '16px',
-      maxWidth: '16px',
-    },
-  });
+  },
+  fileIconImg: {
+    verticalAlign: 'middle',
+    maxHeight: '16px',
+    maxWidth: '16px',
+  },
+});
 
-
-const columns: IColumn[] = [
+export const SearchResults = (props: SearchResultProps) => {
+  const columns: IColumn[] = [
     {
       key: 'column1',
       name: 'Avatar',
       className: classNames.fileIconCell,
       iconClassName: classNames.fileIconHeaderIcon,
-      iconName: 'Page',
+      iconName: 'Contact',
       isIconOnly: true,
       fieldName: 'name',
       minWidth: 16,
       maxWidth: 16,
       onRender: (item: PullRequest) => (
-        <img src={item.authorAvatarUrl} className={classNames.fileIconImg} alt={"Author Avatar"} />
+        <img src={item.authorAvatarUrl} className={classNames.fileIconImg} alt={'Author Avatar'} />
       ),
     },
     {
@@ -61,6 +62,7 @@ const columns: IColumn[] = [
       sortDescendingAriaLabel: 'Sorted Z to A',
       data: 'string',
       isPadded: true,
+      onRender: (item: PullRequest) => <a href={item.url}>{item.title}</a>,
     },
     {
       key: 'column3',
@@ -70,45 +72,43 @@ const columns: IColumn[] = [
       isResizable: true,
       data: 'string',
       onRender: (item: PullRequest) => {
-        return <span>{item.createdAt.toLocaleDateString()}</span>;
+        return <span>{new Date(item.createdAt).toLocaleDateString()}</span>;
       },
       isPadded: true,
     },
     {
-        key: 'column4',
-        name: 'Author Username',
-        fieldName: 'authorLogin',
-        minWidth: 210,
-        maxWidth: 350,
-        isRowHeader: true,
-        isResizable: true,
-        isSorted: true,
-        isSortedDescending: false,
-        sortAscendingAriaLabel: 'Sorted A to Z',
-        sortDescendingAriaLabel: 'Sorted Z to A',
-        data: 'string',
-        isPadded: true,
+      key: 'column4',
+      name: 'Author Username',
+      fieldName: 'authorLogin',
+      minWidth: 210,
+      maxWidth: 350,
+      isRowHeader: true,
+      isResizable: true,
+      isSorted: true,
+      isSortedDescending: false,
+      sortAscendingAriaLabel: 'Sorted A to Z',
+      sortDescendingAriaLabel: 'Sorted Z to A',
+      data: 'string',
+      isPadded: true,
+    },
+    {
+      key: 'column5',
+      name: 'Actions',
+      fieldName: 'authorLogin',
+      minWidth: 210,
+      maxWidth: 350,
+      isRowHeader: true,
+      isResizable: true,
+      isSorted: true,
+      isSortedDescending: false,
+      sortAscendingAriaLabel: 'Sorted A to Z',
+      sortDescendingAriaLabel: 'Sorted Z to A',
+      data: 'string',
+      isPadded: true,
+      onRender: (item: PullRequest) => {
+        return <DefaultButton text={'Add to Board'} onClick={() => props.addToBoard(item)} />;
       },
-      {
-        key: 'column5',
-        name: 'Actions',
-        fieldName: 'authorLogin',
-        minWidth: 210,
-        maxWidth: 350,
-        isRowHeader: true,
-        isResizable: true,
-        isSorted: true,
-        isSortedDescending: false,
-        sortAscendingAriaLabel: 'Sorted A to Z',
-        sortDescendingAriaLabel: 'Sorted Z to A',
-        data: 'string',
-        isPadded: true,
-        onRender: (item: PullRequest) => {
-            return <DefaultButton text={"Add to Board"}/>;
-          },
-      },
+    },
   ];
-
-export const SearchResults = (props: SearchResultProps) => { 
-    return <DetailsList items={props.results} columns={columns} />
-}
+  return <DetailsList items={props.results} columns={columns} selectionMode={SelectionMode.none} />;
+};

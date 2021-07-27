@@ -17,11 +17,13 @@ export class GithubModel  {
     const items = response.data.items;
     const pullRequests: PullRequest[] = items.map((item) => {
       return {
+        id: `${item.id}`,
         title: item.title,
         authorId: `${item.user?.id}` || "",
         authorLogin: item.user?.login || "",
         authorAvatarUrl: item.user?.avatar_url || "",
-        createdAt: new Date(item.created_at)
+        url: item.html_url,
+        createdAt: item.created_at,
       }
     })
     return pullRequests;

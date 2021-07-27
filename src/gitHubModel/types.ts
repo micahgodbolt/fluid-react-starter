@@ -1,7 +1,9 @@
 export interface PullRequest {
+  id: string;
   title: string;
   authorId: string;
   authorLogin: string;
   authorAvatarUrl: string;
-  createdAt: Date;
+  createdAt: string;
+  url: string;
 }

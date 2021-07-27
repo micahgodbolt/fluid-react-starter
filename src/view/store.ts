@@ -1,21 +1,22 @@
 import { FrsMember } from '@fluid-experimental/frs-client';
+import { PullRequest } from '../gitHubModel';
 import { FluidModel } from '../model';
-import { Node } from '../model/types';
+import { Node, Status } from '../model/types';
 import { useGetStore } from '../utils/hooks';
 
 const getDiceArray = (state: Record<string, Node>): Node[] =>
-  Object.keys(state).map((key: string) => ({ key, value: state[key].value }));
+  Object.keys(state).map((key: string) => state[key]);
 
 const getLoadState = (model: FluidModel) => model.getAllNodes();
 
 type IDiceQueries = {
   getAllDice: () => Node[],
-  getByValue: (value: number) => Node[],
+  getByStatus: (status: Status) => Node[],
 }
 
 type IDiceActions = {
-  editDice: (payload: { id: string, props: { value: number } }) => void;
-  createDice: (payload: { id: string, props: { value: number } }) => void;
+  editDice: (payload: { id: string, props: Partial<Node> }) => void;
+  createDice: (payload: { id: string, props: Node }) => void;
   deleteDice: (payload: { id: string }) => void;
 }
 
@@ -27,18 +28,18 @@ export const useGetDiceStore = () => useGetStore<Record<string, Node>, IDiceActi
   // Specify stateful queries to use in the view
   queries: {
     getAllDice: (state) => getDiceArray(state),
-    getByValue: (state, value: number) => getDiceArray(state).filter((i) => i.value === value),
+    getByStatus: (state, status: Status) => getDiceArray(state).filter((i) => i.status === status),
   },
 
   // Specify actions, their payloads, and how they will interact with the model
   actions: {
     editDice: (
       model,
-      payload: { id: string, props: { value: number } }
+      payload: { id: string, props: Partial<Node> }
     ) => model.editNode(payload.id, payload.props),
     createDice: (
       model,
-      payload: { id: string, props: { value: number } }
+      payload: { id: string, props: Node }
     ) => model.createNode(payload.id, payload.props),
     deleteDice: (
       model,
