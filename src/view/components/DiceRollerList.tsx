@@ -2,6 +2,10 @@ import React from 'react';
 import { v4 as uuid } from 'uuid';
 import { DiceRoller } from './DiceRoller';
 import { useGetDiceStore, useGetAudienceStore } from '../store';
+import { SearchBox } from '@fluentui/react';
+import { useGithubModel } from '../../utils';
+import { PullRequest } from '../../gitHubModel';
+import { SearchResults } from './SearchResults';
 
 export const DiceRollerList = () => {
   const {
@@ -12,6 +16,17 @@ export const DiceRollerList = () => {
 
   const {queries: {getAudienceSize, getAudienceNames}} = useGetAudienceStore();
 
+  const { searchPullRequest } = useGithubModel();
+  const [searchResults, setSearchResults] = React.useState<PullRequest[]>([]);
+
+  const searchCallback = React.useCallback(async (query: string | undefined) => {
+    if (!query) {
+      setSearchResults([]);
+    } else {
+      const results = await searchPullRequest(query);
+      setSearchResults(results);
+    }
+  }, [searchPullRequest]);
 
   const randomizeDice = (id: string) =>
     dispatch(
@@ -63,6 +78,9 @@ export const DiceRollerList = () => {
       <button style={{ margin: '5vh', fontSize: 20 }} onClick={handleRollAll}>
         Roll All
       </button>
+
+      <SearchBox placeholder="Search" onSearch={value => searchCallback(value)} />
+      <SearchResults results={searchResults} />
 
       <div style={{ display: 'flex', flexWrap: 'wrap', marginBottom: '5em' }}> {diceRollers} </div>
       <hr />
