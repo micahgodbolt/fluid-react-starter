@@ -1,5 +1,4 @@
 import { FrsMember } from '@fluid-experimental/frs-client';
-import { PullRequest } from '../gitHubModel';
 import { FluidModel } from '../model';
 import { Node, Status } from '../model/types';
 import { useGetStore } from '../utils/hooks';

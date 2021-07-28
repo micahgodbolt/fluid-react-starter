@@ -19,22 +19,7 @@ export const FILEPATH = 'fluid';
 export const serviceConfig = {};
 
 // Setup default data on initialObjects
-export const setDefaultData = (fluidContainer: FluidContainer) => {
-  const defaultData: any[] = [
-    {
-      id: '1',
-      value: 1,
-    },
-    {
-      id: '2',
-      value: 2,
-    },
-  ];
-  const map = fluidContainer.initialObjects.myMap as ISharedMap;
-  for (const data of defaultData) {
-    map.set(data.id, { value: data.value });
-  }
-};
+export const setDefaultData = (fluidContainer: FluidContainer) => {};
 
 ////
 // Connection Config

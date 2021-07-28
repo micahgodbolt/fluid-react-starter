@@ -1,4 +1,3 @@
-import { ISharedMap } from '@fluid-experimental/fluid-framework';
 import { PullRequest } from '../gitHubModel';
 
 export interface Node {
