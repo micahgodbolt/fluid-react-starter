@@ -11,20 +11,15 @@ export type EventPayload = {
 
 export class FluidModel extends EventEmitter {
   private map: ISharedMap;
+  private metadataMap: ISharedMap;
   private audience: IFrsAudience;
   constructor(private container: FluidContainer, private services: FrsContainerServices) {
     super();
-    this.map = container.initialObjects.myMap as ISharedMap;
+    this.map = container.initialObjects.nodeMap as ISharedMap;
+    this.metadataMap = container.initialObjects.metadataMap as ISharedMap;
     this.audience = services.audience;
-    this.map.on("valueChanged", (changed, local, op, target) => {
-      if (!this.nodeExists(changed.key)) {
-        const deleteNodePayload: EventPayload = { type: "singleDelete", changed }
-        this.emit("modelChanged", deleteNodePayload);
-      } else {
-        const changedNodePayload: EventPayload = { type: "singleChange", changed }
-        this.emit("modelChanged", changedNodePayload);
-      }
-    })
+    this.map.on("valueChanged", this.mapListener);
+    this.metadataMap.on("valueChanged", this.mapListener);
     this.audience.on("membersChanged", (members) => {
       const membersChangedPayload = { type: "membersChanged" };
       this.emit("modelChanged", membersChangedPayload);
@@ -42,7 +37,7 @@ export class FluidModel extends EventEmitter {
   };
 
   private nodeExists = (id: string) => {
-    return this.getAllNodeIds().includes(id)
+    return this.getAllNodeIds().includes(id) || this.metadataMap.has(id);
   }
 
   public getNode = (id: string): Node => {
@@ -76,5 +71,24 @@ export class FluidModel extends EventEmitter {
       return;
     }
     this.map.set(id, data);
+  };
+
+  public getRepos = () => {
+    const repos = this.metadataMap.get<string[]>("repos");
+    return repos ?? [];
+  }
+
+  public setRepos = (repos: string[]) => {
+    this.metadataMap.set<string[]>("repos", repos);
+  }
+
+  private mapListener = (changed: IValueChanged) => {
+    if (!this.nodeExists(changed.key)) {
+      const deleteNodePayload: EventPayload = { type: "singleDelete", changed }
+      this.emit("modelChanged", deleteNodePayload);
+    } else {
+      const changedNodePayload: EventPayload = { type: "singleChange", changed }
+      this.emit("modelChanged", changedNodePayload);
+    }
   };
 }

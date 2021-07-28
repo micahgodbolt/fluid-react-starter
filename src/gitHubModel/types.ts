@@ -6,4 +6,5 @@ export interface PullRequest {
   authorAvatarUrl: string;
   createdAt: string;
   url: string;
+  description: string;
 }

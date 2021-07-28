@@ -7,7 +7,8 @@ import { SharedMap, ISharedMap, FluidContainer } from '@fluid-experimental/fluid
 export const containerConfig = {
   name: 'cra-demo-container',
   initialObjects: {
-    myMap: SharedMap,
+    nodeMap: SharedMap,
+    metadataMap: SharedMap,
   },
 };
 

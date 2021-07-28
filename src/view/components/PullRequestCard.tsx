@@ -10,7 +10,7 @@ interface PullRequestCardProps {
 
 export const PullRequestCard = (props: PullRequestCardProps) => {
   const { pullRequest, status } = props.node;
-  const {onUpdateStatus, onDeleteNode, node} = props;
+  const { onUpdateStatus, onDeleteNode, node } = props;
   let buttons;
   if (status === Status.Opened) {
     buttons = (
@@ -30,7 +30,7 @@ export const PullRequestCard = (props: PullRequestCardProps) => {
       <Card.Content extra>
         <div className="ui two buttons">
           <Button basic color="green" onClick={() => onUpdateStatus(node, Status.Opened)}>
-          Move to Opened
+            Move to Opened
           </Button>
           <Button basic color="red" onClick={() => onUpdateStatus(node, Status.Approved)}>
             Move to Approved
@@ -53,20 +53,24 @@ export const PullRequestCard = (props: PullRequestCardProps) => {
     );
   }
   return (
-      <Card key={pullRequest.id} style={{height: "30vh"}}>
-        <Card.Content>
-          <Image floated="right" size="mini" src={pullRequest.authorAvatarUrl} />
-          <Card.Header>{pullRequest.title}</Card.Header>
-          <Card.Meta>{`Created by ${pullRequest.authorLogin}`}</Card.Meta>
-          <Card.Description>{`Status: ${status}`}</Card.Description>
-          <Card.Description>{`Created on ${new Date(pullRequest.createdAt).toLocaleDateString()}`}</Card.Description>
-        </Card.Content>
-        {buttons}
-        <Card.Content>
+    <Card key={pullRequest.id} style={{ height: '32vh' }}>
+      <Card.Content>
+        <Image floated="right" size="mini" src={pullRequest.authorAvatarUrl} />
+        <Card.Header style={{ overflowY: 'scroll', height: '8vh' }}>
+          {<label style={{ textOverflow: 'ellipsis' }}>{pullRequest.title}</label>}
+        </Card.Header>
+        <Card.Meta>{`Created by ${pullRequest.authorLogin}`}</Card.Meta>
+        <Card.Description>{`Status: ${status}`}</Card.Description>
+        <Card.Description>{`Created on ${new Date(
+          pullRequest.createdAt
+        ).toLocaleDateString()}`}</Card.Description>
+      </Card.Content>
+      {buttons}
+      <Card.Content>
         <Button basic color="red" onClick={() => onDeleteNode(node.pullRequest.id)}>
-            Remove
-          </Button>
-        </Card.Content>
-      </Card>
+          Remove
+        </Button>
+      </Card.Content>
+    </Card>
   );
 };

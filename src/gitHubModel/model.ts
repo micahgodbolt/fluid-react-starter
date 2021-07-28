@@ -12,9 +12,11 @@ export class GithubModel  {
     });
   }
 
-  public searchPullRequest = async (query: string): Promise<PullRequest[]> => {
-    const response =  await this.octokit.search.issuesAndPullRequests({q: `${query}+is:pull-request`});
+  public searchPullRequest = async (query: string, repos: string[]): Promise<PullRequest[]> => {
+    const queryParam = repos.length === 0 ? `${query}+is:pull-request` : `${query}+is:pull-request+repo:${repos.join(" ")}`;
+    const response =  await this.octokit.search.issuesAndPullRequests({q: queryParam});
     const items = response.data.items;
+
     const pullRequests: PullRequest[] = items.map((item) => {
       return {
         id: `${item.id}`,
@@ -24,8 +26,15 @@ export class GithubModel  {
         authorAvatarUrl: item.user?.avatar_url || "",
         url: item.html_url,
         createdAt: item.created_at,
+        description: item.body || "",
       }
     })
     return pullRequests;
+  }
+
+  public searchRepos = async (query: string): Promise<string[]> => {
+    const response =  await this.octokit.search.repos({q: query});
+    const items = response.data.items.map(item => item.full_name);
+    return items;
   }
 }

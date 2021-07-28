@@ -3,31 +3,46 @@ import { FluidModel } from '../model';
 import { Node, Status } from '../model/types';
 import { useGetStore } from '../utils/hooks';
 
-const getDiceArray = (state: Record<string, Node>): Node[] =>
-  Object.keys(state).map((key: string) => state[key]);
+const getDiceArray = (nodes: Record<string, Node>): Node[] =>{
+  return Object.keys(nodes).map((key: string) => nodes[key]);
+}
+  
 
-const getLoadState = (model: FluidModel) => model.getAllNodes();
+const getLoadState = (model: FluidModel) => { 
+  return {
+    nodes: model.getAllNodes(),
+    repos: model.getRepos(),
+  }
+}
+
+interface IStoreState {
+  nodes: Record<string, Node>,
+  repos: string[],
+}
 
 type IDiceQueries = {
   getAllDice: () => Node[],
   getByStatus: (status: Status) => Node[],
+  getRepos: () => string[],
 }
 
 type IDiceActions = {
   editDice: (payload: { id: string, props: Partial<Node> }) => void;
   createDice: (payload: { id: string, props: Node }) => void;
   deleteDice: (payload: { id: string }) => void;
+  setRepos: (payload: { repos: string[] }) => void
 }
 
-export const useGetDiceStore = () => useGetStore<Record<string, Node>, IDiceActions, IDiceQueries>({
+export const useGetDiceStore = () => useGetStore<IStoreState, IDiceActions, IDiceQueries>({
 
   // Establish initial state on load
   initialState: (model) => getLoadState(model),
 
   // Specify stateful queries to use in the view
   queries: {
-    getAllDice: (state) => getDiceArray(state),
-    getByStatus: (state, status: Status) => getDiceArray(state).filter((i) => i.status === status),
+    getAllDice: (state) => getDiceArray(state.nodes),
+    getByStatus: (state, status: Status) => getDiceArray(state.nodes).filter((i) => i.status === status),
+    getRepos: (state) => state.repos,
   },
 
   // Specify actions, their payloads, and how they will interact with the model
@@ -43,20 +58,28 @@ export const useGetDiceStore = () => useGetStore<Record<string, Node>, IDiceActi
     deleteDice: (
       model,
       payload: { id: string }
-    ) => model.deleteNode(payload.id)
+    ) => model.deleteNode(payload.id),
+    setRepos: (
+      model,
+      payload: { repos: string[] }
+    ) => model.setRepos(payload.repos)
   },
 
   // Sync view state with Fluid state by loading default state or patching the key that changed
   reducer: (model, state, { type, changed }) => {
-    let newState;
+    let newState: IStoreState;
     switch (type) {
       case "singleChange":
-        const changedItem = { [changed.key]: model.getNode(changed.key) }
-        newState = { ...state, ...changedItem };
+        if (changed.key === "repos") {
+          newState = { ...state, ...{ repos: model.getRepos()} };
+        } else {
+          const changedItem = { [changed.key]: model.getNode(changed.key) }
+          newState = { ...state, nodes: { ...state.nodes, ...changedItem }};
+        }
         break;
       case "singleDelete":
-        const { [changed.key]: removedItem, ...rest } = state;
-        newState = rest;
+        const { [changed.key]: removedItem, ...rest } = state.nodes;
+        newState = {...state, nodes: rest };
         break;
       default: {
         newState = getLoadState(model);
