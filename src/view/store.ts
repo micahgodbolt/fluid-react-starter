@@ -3,7 +3,7 @@ import { FluidModel } from '../model';
 import { Node } from '../model/types';
 import { useGetStore } from '../utils/hooks';
 
-type IDiceStore = Record<string, Node>;
+type IDiceState = Record<string, Node>;
 
 type IDiceQueries = {
   getAllDice: () => Node[],
