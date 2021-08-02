@@ -3,10 +3,7 @@ import { FluidModel } from '../model';
 import { Node } from '../model/types';
 import { useGetStore } from '../utils/hooks';
 
-const getDiceArray = (state: Record<string, Node>): Node[] =>
-  Object.keys(state).map((key: string) => ({ key, value: state[key].value }));
-
-const getLoadState = (model: FluidModel) => model.getAllNodes();
+type IDiceStore = Record<string, Node>;
 
 type IDiceQueries = {
   getAllDice: () => Node[],
@@ -19,7 +16,12 @@ type IDiceActions = {
   deleteDice: (payload: { id: string }) => void;
 }
 
-export const useGetDiceStore = () => useGetStore<Record<string, Node>, IDiceActions, IDiceQueries>({
+const getDiceArray = (state: IDiceStore): Node[] =>
+  Object.keys(state).map((key: string) => ({ key, value: state[key].value }));
+
+const getLoadState = (model: FluidModel) => model.getAllNodes();
+
+export const useGetDiceStore = () => useGetStore<IDiceStore, IDiceActions, IDiceQueries>({
 
   // Establish initial state on load
   initialState: (model) => getLoadState(model),
@@ -47,22 +49,17 @@ export const useGetDiceStore = () => useGetStore<Record<string, Node>, IDiceActi
   },
 
   // Sync view state with Fluid state by loading default state or patching the key that changed
-  reducer: (model, state, { type, changed }) => {
-    let newState;
+  reducer: (model, draft, { type, changed }) => {
     switch (type) {
       case "singleChange":
-        const changedItem = { [changed.key]: model.getNode(changed.key) }
-        newState = { ...state, ...changedItem };
+        draft[changed.key] = model.getNode(changed.key)
         break;
       case "singleDelete":
-        const { [changed.key]: removedItem, ...rest } = state;
-        newState = rest;
-        break;
-      default: {
-        newState = getLoadState(model);
-      }
+        delete draft[changed.key];
+        break;  
+      default:
+        return getLoadState(model)    
     }
-    return newState;
   },
 });
 
@@ -76,7 +73,7 @@ export const useGetAudienceStore = () => useGetStore<FrsMember[], {}, IAudienceQ
     getAudienceSize: (state) => state.length
   },
   actions: {},
-  reducer: (model, state, {type}) => {
-    return model.getAudience();
+  reducer: (model) => {
+     return model.getAudience();
   }
 })
